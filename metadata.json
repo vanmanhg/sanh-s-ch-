@@ -1,0 +1,6 @@
+{
+  "name": "Nông Trợ Xanh AI - Trợ Lý Làm Vườn & Canh Tác Thông Minh",
+  "description": "Ứng dụng làm vườn và nông nghiệp toàn diện: nhận diện cây trồng & sâu bệnh bằng AI Gemini, nhắc lịch tưới nước, nhật ký tăng trưởng, cảnh báo thời tiết, diễn đàn trao đổi hạt giống miễn phí, chợ cây cảnh & nông sản, bản đồ vật tư, theo dõi giá nông sản và trợ lý giọng nói AI.",
+  "requestFramePermissions": ["geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
