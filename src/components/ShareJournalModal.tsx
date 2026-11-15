@@ -210,7 +210,8 @@ export const ShareJournalModal: React.FC<ShareJournalModalProps> = ({
       a.click();
     } catch (err) {
       console.error('Error generating image canvas:', err);
-      alert('Không thể xuất thẻ ảnh tự động. Bạn có thể chụp màn hình thẻ bên dưới nhé!');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } finally {
       setIsGeneratingImage(false);
     }

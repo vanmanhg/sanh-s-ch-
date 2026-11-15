@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720" role="img" aria-label="Bản đồ nông nghiệp tĩnh lưu bộ nhớ đệm">
+  <defs>
+    <linearGradient id="landGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8f3e4" />
+      <stop offset="50%" stop-color="#edf5ea" />
+      <stop offset="100%" stop-color="#dfeedc" />
+    </linearGradient>
+    <linearGradient id="riverGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7dd3fc" />
+      <stop offset="50%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+    <pattern id="gridPattern" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#94a3b8" stroke-width="0.6" stroke-opacity="0.32" />
+      <path d="M 40 0 L 40 80 M 0 40 L 80 40" fill="none" stroke="#94a3b8" stroke-width="0.35" stroke-opacity="0.18" stroke-dasharray="3 3" />
+    </pattern>
+    <pattern id="orchardPattern" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="6" cy="6" r="2.2" fill="#4ade80" fill-opacity="0.32" />
+      <circle cx="18" cy="18" r="2.2" fill="#22c55e" fill-opacity="0.28" />
+    </pattern>
+  </defs>
+
+  <!-- Base terrain -->
+  <rect width="1200" height="720" fill="url(#landGrad)" />
+
+  <!-- Agricultural land parcels & greenbelts -->
+  <polygon points="0,0 440,0 380,210 120,250 0,190" fill="#d9edd4" />
+  <polygon points="620,40 1020,0 1200,0 1200,290 880,260 660,180" fill="#d4ebd0" />
+  <polygon points="40,420 410,390 460,640 160,720 0,720 0,520" fill="#d7ecd3" />
+  <polygon points="730,440 1120,410 1200,510 1200,720 680,720" fill="#cfe9cb" />
+
+  <!-- Cultivated orchard patches -->
+  <rect x="90" y="70" width="230" height="120" rx="18" fill="url(#orchardPattern)" />
+  <rect x="780" y="65" width="290" height="150" rx="22" fill="url(#orchardPattern)" />
+  <rect x="130" y="470" width="260" height="150" rx="20" fill="url(#orchardPattern)" />
+  <rect x="820" y="480" width="270" height="160" rx="24" fill="url(#orchardPattern)" />
+
+  <!-- Urban / town clusters -->
+  <g fill="#f1efe7" stroke="#d6d3c9" stroke-width="1">
+    <rect x="460" y="210" width="110" height="70" rx="6" />
+    <rect x="590" y="220" width="85" height="60" rx="6" />
+    <rect x="490" y="310" width="125" height="80" rx="6" />
+    <rect x="330" y="255" width="90" height="65" rx="6" />
+    <rect x="860" y="285" width="110" height="75" rx="6" />
+  </g>
+
+  <!-- Coordinate graticule -->
+  <rect width="1200" height="720" fill="url(#gridPattern)" />
+
+  <!-- River & irrigation canals -->
+  <path d="M -20 185 C 190 225, 310 140, 490 200 C 660 255, 760 125, 960 170 C 1070 195, 1140 155, 1230 175"
+        fill="none" stroke="#bae6fd" stroke-width="34" stroke-linecap="round" />
+  <path d="M -20 185 C 190 225, 310 140, 490 200 C 660 255, 760 125, 960 170 C 1070 195, 1140 155, 1230 175"
+        fill="none" stroke="url(#riverGrad)" stroke-width="22" stroke-linecap="round" opacity="0.88" />
+
+  <path d="M 520 212 C 500 340, 420 460, 455 585 C 480 660, 430 705, 410 740"
+        fill="none" stroke="#93c5fd" stroke-width="12" stroke-linecap="round" opacity="0.75" />
+  <path d="M 180 205 C 215 310, 175 430, 210 560 C 230 630, 195 690, 180 740"
+        fill="none" stroke="#93c5fd" stroke-width="8" stroke-linecap="round" opacity="0.65" />
+
+  <!-- Secondary local farm roads -->
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
+    <path d="M 85 0 L 145 720" stroke-width="6" />
+    <path d="M 330 0 C 345 220, 310 470, 285 720" stroke-width="6" />
+    <path d="M 760 0 C 745 240, 795 470, 825 720" stroke-width="6" />
+    <path d="M 1030 0 C 1015 260, 1060 490, 1085 720" stroke-width="5.5" />
+    <path d="M 0 110 C 360 130, 820 90, 1200 125" stroke-width="5.5" />
+    <path d="M 0 495 C 390 470, 780 535, 1200 490" stroke-width="6" />
+    <path d="M 0 635 C 420 605, 810 665, 1200 620" stroke-width="5" />
+  </g>
+  <g fill="none" stroke="#cbd5e1" stroke-linecap="round" stroke-linejoin="round" opacity="0.75">
+    <path d="M 85 0 L 145 720" stroke-width="1.4" />
+    <path d="M 330 0 C 345 220, 310 470, 285 720" stroke-width="1.4" />
+    <path d="M 760 0 C 745 240, 795 470, 825 720" stroke-width="1.4" />
+    <path d="M 0 495 C 390 470, 780 535, 1200 490" stroke-width="1.4" />
+  </g>
+
+  <!-- Primary regional highways (casing + amber fill) -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M -20 355 C 290 345, 510 310, 780 345 C 970 370, 1090 335, 1220 350" stroke="#d97706" stroke-width="12" opacity="0.45" />
+    <path d="M -20 355 C 290 345, 510 310, 780 345 C 970 370, 1090 335, 1220 350" stroke="#fcd34d" stroke-width="8" />
+    <path d="M 555 -20 C 575 180, 560 400, 620 740" stroke="#d97706" stroke-width="11" opacity="0.45" />
+    <path d="M 555 -20 C 575 180, 560 400, 620 740" stroke="#fde68a" stroke-width="7.5" />
+  </g>
+
+  <!-- Subtle topographic contour rings -->
+  <g fill="none" stroke="#86efac" stroke-width="1" stroke-opacity="0.4">
+    <ellipse cx="980" cy="145" rx="135" ry="75" />
+    <ellipse cx="980" cy="145" rx="95" ry="48" />
+    <ellipse cx="220" cy="560" rx="140" ry="78" />
+  </g>
+</svg>

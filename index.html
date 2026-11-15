@@ -2,6 +2,68 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function() {
+        try {
+          var savedTheme = localStorage.getItem('nongtro_theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var activeTheme = (savedTheme === 'dark' || savedTheme === 'light') ? savedTheme : (prefersDark ? 'dark' : 'light');
+          if (activeTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          }
+          var savedLang = localStorage.getItem('nongtro_lang');
+          if (savedLang === 'vi' || savedLang === 'en' || savedLang === 'zh' || savedLang === 'km' || savedLang === 'ja') {
+            document.documentElement.lang = savedLang;
+          } else {
+            document.documentElement.lang = 'vi';
+          }
+        } catch (err) {}
+      })();
+    </script>
+    <script>
+      (function() {
+        var _err = console.error;
+        console.error = function() {
+          var msg = Array.prototype.slice.call(arguments).map(String).join(' ');
+          if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('websocket') !== -1) return;
+          if (
+            msg.indexOf('InvalidKeyMapError') !== -1 ||
+            msg.indexOf('ApiProjectMapError') !== -1 ||
+            msg.indexOf('gm_authFailure') !== -1 ||
+            msg.indexOf('developers.google.com/maps') !== -1
+          ) {
+            try {
+              window.dispatchEvent(new CustomEvent('gmp-auth-failed'));
+            } catch (err) {}
+            return;
+          }
+          _err.apply(console, arguments);
+        };
+        window.addEventListener('error', function(e) {
+          if (!e) return;
+          var msg = e.message || '';
+          if (
+            msg === 'Script error.' ||
+            msg.indexOf('WebSocket') !== -1 ||
+            msg.indexOf('websocket') !== -1 ||
+            msg.indexOf('InvalidKeyMapError') !== -1 ||
+            msg.indexOf('Google Maps') !== -1 ||
+            msg.indexOf('maps.googleapis') !== -1
+          ) {
+            try {
+              window.dispatchEvent(new CustomEvent('gmp-auth-failed'));
+            } catch (err) {}
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            return true;
+          }
+        }, true);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nông Trợ Xanh AI - Trợ Lý Làm Vườn & Canh Tác Thông Minh</title>
     <meta name="description" content="Ứng dụng làm vườn và nông nghiệp toàn diện: nhận diện cây trồng & sâu bệnh bằng AI Gemini, nhắc lịch tưới nước, nhật ký tăng trưởng, cảnh báo thời tiết, diễn đàn trao đổi hạt giống miễn phí, chợ cây cảnh & nông sản, bản đồ vật tư, theo dõi giá nông sản và trợ lý giọng nói AI." />
@@ -9,6 +71,13 @@
     <meta property="og:description" content="Ứng dụng làm vườn và nông nghiệp toàn diện: nhận diện cây trồng & sâu bệnh bằng AI Gemini, nhắc lịch tưới nước, nhật ký tăng trưởng, cảnh báo thời tiết, diễn đàn trao đổi hạt giống miễn phí, chợ cây cảnh & nông sản, bản đồ vật tư, theo dõi giá nông sản và trợ lý giọng nói AI." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#059669" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="NôngTrợXanh" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">

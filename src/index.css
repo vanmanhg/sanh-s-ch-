@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   body {
@@ -36,29 +37,67 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 12mm 15mm 12mm 15mm;
+    margin: 12mm 14mm 12mm 14mm;
   }
 
-  body {
+  html, body {
     background: #ffffff !important;
     color: #000000 !important;
-    font-size: 11pt !important;
+    font-size: 10.5pt !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 
-  /* Hide app navigation, headers, floating bars, and modal backdrops during print */
+  /* Hide app navigation, headers, floating bars, and main app root when print portal is mounted */
   header, nav, .print\:hidden, [role="navigation"] {
     display: none !important;
   }
 
-  /* Force printable report to be visible and clear container styles */
+  body:has(#printable-report-backdrop) #root {
+    display: none !important;
+  }
+
+  /* When PlantReportPdfModal is open, expand its wrapper to full flow layout */
+  #printable-report-backdrop {
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  #printable-report-container {
+    max-width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+  /* Force printable report to be visible and clear container scroll clipping */
   #printable-report {
     display: block !important;
     width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
-    background: transparent !important;
+    background: #ffffff !important;
     box-shadow: none !important;
     border: none !important;
+    color: #111827 !important;
+  }
+
+  .print-avoid-break {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   table {

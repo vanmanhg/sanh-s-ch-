@@ -11,7 +11,10 @@ import {
   FarmTransaction,
   CommodityPriceItem,
   DiseaseEncyclopediaItem,
-  VideoGuideItem
+  VideoGuideItem,
+  MarketOrder,
+  ExpertThread,
+  ExpertQAQuestion
 } from '../types';
 
 export const INITIAL_PLANTS: Plant[] = [
@@ -41,9 +44,9 @@ export const INITIAL_PLANTS: Plant[] = [
       { id: 'cl-3', plantId: 'plant-1', date: new Date(Date.now() - 14 * 86400 * 1000).toISOString(), type: 'prune', notes: 'Vặt bỏ chồi nách phụ phía dưới' }
     ],
     growthHistory: [
-      { id: 'g-1', plantId: 'plant-1', date: new Date(Date.now() - 28 * 86400 * 1000).toISOString(), heightCm: 15, leafCount: 6, healthScore: 85, notes: 'Cây giống bén rễ tốt' },
-      { id: 'g-2', plantId: 'plant-1', date: new Date(Date.now() - 14 * 86400 * 1000).toISOString(), heightCm: 38, leafCount: 16, healthScore: 90, notes: 'Bắt đầu phân cành mạnh' },
-      { id: 'g-3', plantId: 'plant-1', date: new Date(Date.now() - 2 * 86400 * 1000).toISOString(), heightCm: 65, leafCount: 28, healthScore: 94, notes: 'Xuất hiện nụ hoa vàng rực rỡ' }
+      { id: 'g-1', plantId: 'plant-1', date: new Date(Date.now() - 28 * 86400 * 1000).toISOString(), heightCm: 15, leafCount: 6, healthScore: 85, photoUrl: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=400&q=80', notes: 'Cây giống bén rễ tốt' },
+      { id: 'g-2', plantId: 'plant-1', date: new Date(Date.now() - 14 * 86400 * 1000).toISOString(), heightCm: 38, leafCount: 16, healthScore: 90, photoUrl: 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924?auto=format&fit=crop&w=400&q=80', notes: 'Bắt đầu phân cành mạnh' },
+      { id: 'g-3', plantId: 'plant-1', date: new Date(Date.now() - 2 * 86400 * 1000).toISOString(), heightCm: 65, leafCount: 28, healthScore: 94, photoUrl: 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=400&q=80', notes: 'Xuất hiện nụ hoa vàng rực rỡ' }
     ]
   },
   {
@@ -70,8 +73,8 @@ export const INITIAL_PLANTS: Plant[] = [
       { id: 'cl-4', plantId: 'plant-2', date: new Date(Date.now() - 12 * 3600 * 1000).toISOString(), type: 'water', amount: '800ml', notes: 'Lau bụi mặt lá' }
     ],
     growthHistory: [
-      { id: 'g-4', plantId: 'plant-2', date: new Date(Date.now() - 30 * 86400 * 1000).toISOString(), heightCm: 45, leafCount: 5, healthScore: 92 },
-      { id: 'g-5', plantId: 'plant-2', date: new Date(Date.now() - 5 * 86400 * 1000).toISOString(), heightCm: 58, leafCount: 7, healthScore: 96, notes: 'Lá thứ 7 xẻ rãnh cân đối' }
+      { id: 'g-4', plantId: 'plant-2', date: new Date(Date.now() - 30 * 86400 * 1000).toISOString(), heightCm: 45, leafCount: 5, healthScore: 92, photoUrl: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=400&q=80', notes: 'Chuyển chậu mới giá thể thoáng rễ' },
+      { id: 'g-5', plantId: 'plant-2', date: new Date(Date.now() - 5 * 86400 * 1000).toISOString(), heightCm: 58, leafCount: 7, healthScore: 96, photoUrl: 'https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=400&q=80', notes: 'Lá thứ 7 xẻ rãnh cân đối' }
     ]
   },
   {
@@ -412,68 +415,471 @@ export const MARKET_ITEMS: MarketItem[] = [
     title: 'Sầu Riêng Ri6 Chín Cây Tự Nhiên (Bao Ăn 1 Đổi 1)',
     category: 'produce',
     price: 95000,
+    originalPrice: 120000,
     unit: '1 kg',
     sellerName: 'Hợp Tác Xã Sầu Riêng Tiền Giang',
+    sellerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
     sellerPhone: '0912.333.444',
     sellerZalo: '0912333444',
+    sellerBadge: 'Vườn VietGAP Cấp Tỉnh',
+    sellerResponseRate: 99,
+    sellerJoinYear: 2022,
     location: 'Cai Lậy, Tiền Giang',
     rating: 4.9,
     reviewsCount: 128,
+    soldCount: 840,
     imageUrl: 'https://images.unsplash.com/photo-1546548970-71785318a17b?auto=format&fit=crop&w=600&q=80',
-    description: 'Sầu riêng chín rụng tự nhiên, cơm dày vàng óng, dẻo béo không sượng, bảo đảm canh tác theo tiêu chuẩn VietGAP không nhúng thuốc.',
+    description: 'Sầu riêng chín rụng tự nhiên, cơm dày vàng óng, dẻo béo không sượng, bảo đảm canh tác theo tiêu chuẩn VietGAP không nhúng thuốc bảo quản. Bao ăn từng múi, 1 đổi 1 trong vòng 24 giờ nếu sượng hỏng.',
+    specifications: {
+      'Xuất xứ': 'Cai Lậy, Tiền Giang',
+      'Tiêu chuẩn': 'VietGAP, Không chất kích thích',
+      'Độ đường': 'Brix 32-35%',
+      'Trọng lượng quả': '2.2kg - 4.5kg/trái'
+    },
     stock: 250,
-    isOrganic: true
+    isOrganic: true,
+    shippingCarriers: ['ghtk', 'viettel', 'express', 'pickup'],
+    reviews: [
+      {
+        id: 'rev-1-1',
+        authorName: 'Nguyễn Văn Hùng',
+        authorAvatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80',
+        rating: 5,
+        date: '08/11/2026',
+        content: 'Trái sầu riêng 3.2kg nhận về thơm nức mũi cả nhà, khui ra múi vàng óng, hạt lép kẹp béo ngọt lịm. Đóng gói thùng carton chống sốc rất cẩn thận!',
+        verifiedPurchase: true,
+        sellerReply: 'Cảm ơn anh Hùng đã ủng hộ HTX vườn sầu riêng Cai Lậy ạ!'
+      },
+      {
+        id: 'rev-1-2',
+        authorName: 'Trần Thị Mai',
+        authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80',
+        rating: 5,
+        date: '02/11/2026',
+        content: 'Giao hỏa tốc nhận trong ngày tại Sài Gòn, cơm dẻo quánh chuẩn sầu chín rụng cây.',
+        verifiedPurchase: true
+      }
+    ]
   },
   {
     id: 'prod-2',
-    title: 'Cây Trầu Bà Lỗ (Monstera Adansonii) Thụy Sĩ',
+    title: 'Cây Trầu Bà Lỗ (Monstera Adansonii) Chậu Sứ Men Mát',
     category: 'plant',
     price: 145000,
+    originalPrice: 180000,
     unit: 'Chậu gốm sẵn cây',
     sellerName: 'Vườn Cảnh Bonsai Sài Gòn',
+    sellerAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
     sellerPhone: '0908.555.666',
     sellerZalo: '0908555666',
+    sellerBadge: 'Vườn Ươm Uy Tín 5⭐',
+    sellerResponseRate: 98,
+    sellerJoinYear: 2021,
     location: 'Quận 12, TP.HCM',
     rating: 4.8,
     reviewsCount: 86,
+    soldCount: 312,
     imageUrl: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=600&q=80',
-    description: 'Cây trầu bà lá thủng phong thủy tài lộc, thanh lọc không khí cực tốt, tặng kèm đĩa lót và hướng dẫn chăm sóc.',
-    stock: 45
+    description: 'Cây trầu bà lá thủng phong thủy tài lộc, thanh lọc formaldehyde và benzene trong không khí cực tốt. Cây đã thuần chậu rễ khỏe, tặng kèm đĩa lót gốm chống tràn nước và gói phân tan chậm.',
+    specifications: {
+      'Chiều cao': '30 - 45 cm',
+      'Đường kính chậu': '16 cm',
+      'Ánh sáng': 'Tán xạ gián tiếp / Ban công mát',
+      'Bảo hành': 'Bảo hành cây xanh tươi 7 ngày'
+    },
+    stock: 45,
+    shippingCarriers: ['ghtk', 'viettel', 'express', 'pickup'],
+    reviews: [
+      {
+        id: 'rev-2-1',
+        authorName: 'Lê Thanh Thảo',
+        rating: 5,
+        date: '05/11/2026',
+        content: 'Cây nhận về lá xanh mướt không rách lá nào, rễ bám chắc chậu. Để bàn làm việc nhìn thư thái hẳn.',
+        verifiedPurchase: true
+      }
+    ]
   },
   {
     id: 'prod-3',
-    title: 'Phân Trùn Quế Hữu Cơ Ép Viên Tan Chậm (Bao 5kg)',
-    category: 'fertilizer',
-    price: 85000,
-    unit: 'Bao 5kg',
-    sellerName: 'Nông Trại Hữu Cơ Sinh Học',
-    sellerPhone: '0938.777.888',
-    sellerZalo: '0938777888',
-    location: 'Củ Chi, TP.HCM',
-    rating: 5.0,
-    reviewsCount: 215,
-    imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80',
-    description: 'Giàu kén trùn và vi sinh vật có ích, kháng tuyến trùng hại rễ, phù hợp cho hoa lan, hoa hồng và rau sạch ban công.',
-    stock: 500,
-    isOrganic: true
+    title: 'Hạt Giống Cà Chua Bi Lùn F1 Siêu Ngọt Sugar Cherry (Gói 50 Hạt)',
+    category: 'seed',
+    price: 35000,
+    originalPrice: 45000,
+    unit: 'Gói 50 hạt F1',
+    sellerName: 'Viện Giống Cây Trồng Nhiệt Đới',
+    sellerAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+    sellerPhone: '0935.123.456',
+    sellerZalo: '0935123456',
+    sellerBadge: 'Nhà Cung Cấp Hạt Giống Chuẩn',
+    sellerResponseRate: 100,
+    sellerJoinYear: 2020,
+    location: 'Đống Đa, Hà Nội',
+    rating: 4.9,
+    reviewsCount: 342,
+    soldCount: 1520,
+    imageUrl: 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=600&q=80',
+    description: 'Giống cà chua bi lùn thích hợp trồng chậu ban công và sân thượng, cây cao 45-60cm sai trĩu quả chùm 15-25 trái. Quả đỏ mọng, vị ngọt thanh giòn tan, kháng bệnh sương mai cực tốt.',
+    specifications: {
+      'Tỷ lệ nảy mầm': '> 92%',
+      'Độ sạch': '99.5%',
+      'Thời gian thu hoạch': '60 - 65 ngày',
+      'Hạn sử dụng': '2 năm (Bao bì nhôm hút chân không)'
+    },
+    stock: 600,
+    isOrganic: true,
+    shippingCarriers: ['ghtk', 'viettel', 'express'],
+    reviews: [
+      {
+        id: 'rev-3-1',
+        authorName: 'Phạm Đức Toàn',
+        rating: 5,
+        date: '09/11/2026',
+        content: 'Ủ hạt bằng khăn ẩm sau 48h nảy mầm đều tăm tắp 100%. Rất tin tưởng hạt giống của Viện.',
+        verifiedPurchase: true,
+        sellerReply: 'Cảm ơn anh Toàn, nhớ tỉa bớt nhánh phụ ở nách lá để cây dồn sức nuôi chùm quả ngọt nhé!'
+      }
+    ]
   },
   {
     id: 'prod-4',
-    title: 'Bộ Kéo Cắt Tỉa Cành Thép SK5 Nhật Bản Chính Hãng',
+    title: 'Hạt Giống Dưa Lưới Ruột Cam Nhật Bản F1 Taki (Gói 20 Hạt)',
+    category: 'seed',
+    price: 55000,
+    originalPrice: 70000,
+    unit: 'Gói 20 hạt',
+    sellerName: 'Hạt Giống Nông Nghiệp Công Nghệ Cao',
+    sellerAvatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80',
+    sellerPhone: '0982.789.012',
+    sellerZalo: '0982789012',
+    sellerBadge: 'Đại Lý Hạt F1 Nhập Khẩu',
+    sellerResponseRate: 97,
+    sellerJoinYear: 2022,
+    location: 'Đà Lạt, Lâm Đồng',
+    rating: 4.8,
+    reviewsCount: 156,
+    soldCount: 680,
+    imageUrl: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80',
+    description: 'Giống dưa lưới vân nổi dày đều đẹp như tác phẩm điêu khắc, ruột cam đậm giòn ngọt thơm lừng, độ đường đạt 14-16 Brix. Trồng tốt trong nhà màng và sân thượng.',
+    specifications: {
+      'Tỷ lệ nảy mầm': '> 90%',
+      'Trọng lượng quả': '1.5 - 2.2 kg',
+      'Thời gian sinh trưởng': '75 ngày',
+      'Độ Brix': '14 - 16%'
+    },
+    stock: 300,
+    isOrganic: true,
+    shippingCarriers: ['ghtk', 'viettel', 'express'],
+    reviews: [
+      {
+        id: 'rev-4-1',
+        authorName: 'Hoàng Minh Quân',
+        rating: 5,
+        date: '04/11/2026',
+        content: 'Dưa leo giàn lên khỏe, quả to vân nổi cực đều và thơm ngọt nức tiếng.',
+        verifiedPurchase: true
+      }
+    ]
+  },
+  {
+    id: 'prod-5',
+    title: 'Phân Trùn Quế Hữu Cơ Ép Viên Tan Chậm Nguyên Chất (Bao 5kg)',
+    category: 'fertilizer',
+    price: 85000,
+    originalPrice: 105000,
+    unit: 'Bao 5kg',
+    sellerName: 'Nông Trại Hữu Cơ Sinh Học Củ Chi',
+    sellerAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80',
+    sellerPhone: '0938.777.888',
+    sellerZalo: '0938777888',
+    sellerBadge: 'Hữu Cơ Vi Sinh Chuẩn OMRI',
+    sellerResponseRate: 99,
+    sellerJoinYear: 2021,
+    location: 'Củ Chi, TP.HCM',
+    rating: 5.0,
+    reviewsCount: 215,
+    soldCount: 1420,
+    imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80',
+    description: 'Giàu kén trùn và hệ vi sinh vật có ích cố định đạm phân giải lân, hoàn toàn không mùi hôi. Kháng nấm rễ, thích hợp bón lót và bón thúc cho hoa lan, hoa hồng, dâu tây và rau sạch ban công.',
+    specifications: {
+      'Thành phần': '100% phân trùn quế ép viên',
+      'Độ ẩm': '< 25%',
+      'Hữu cơ': '> 50%',
+      'Quy cách': 'Bao dập nhiệt 5kg'
+    },
+    stock: 500,
+    isOrganic: true,
+    shippingCarriers: ['ghtk', 'viettel', 'express', 'pickup'],
+    reviews: [
+      {
+        id: 'rev-5-1',
+        authorName: 'Đặng Tuấn Kiệt',
+        rating: 5,
+        date: '07/11/2026',
+        content: 'Phân viên nén chắc, rải chậu tưới nước không bị bở nát bẩn sàn, cây đâm chồi xanh mỡ gà.',
+        verifiedPurchase: true
+      }
+    ]
+  },
+  {
+    id: 'prod-6',
+    title: 'Bộ Kéo Cắt Tỉa Cành Thép SK5 Nhật Bản Chuyên Dụng (Kèm Lò Xo Phụ)',
     category: 'tool',
     price: 180000,
+    originalPrice: 240000,
     unit: 'Bộ',
     sellerName: 'Vật Tư Nông Nghiệp Minh Phát',
+    sellerAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80',
     sellerPhone: '0944.999.000',
     sellerZalo: '0944999000',
+    sellerBadge: 'Dụng Cụ Chính Hãng',
+    sellerResponseRate: 96,
+    sellerJoinYear: 2022,
     location: 'Hoàng Mai, Hà Nội',
     rating: 4.9,
     reviewsCount: 194,
+    soldCount: 780,
     imageUrl: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=600&q=80',
-    description: 'Lưỡi thép siêu sắc bén tôi nhiệt luyện, có khóa an toàn, trợ lực cắt êm ái cành cây đến phi 25mm.',
-    stock: 80
+    description: 'Lưỡi kéo thép carbon SK5 Nhật Bản siêu sắc bén tôi nhiệt cao tần, vết cắt ngọt lịm không dập nát cành. Tay cầm đúc hợp kim nhôm bọc cao su chống trơn trượt kèm khóa an toàn thông minh.',
+    specifications: {
+      'Chất liệu lưỡi': 'Thép carbon cao SK5 mạ Teflon',
+      'Độ mở lưỡi': 'Cắt cành tối đa đường kính 25mm',
+      'Chiều dài tổng thể': '210mm',
+      'Trọng lượng': '240g'
+    },
+    stock: 80,
+    shippingCarriers: ['ghtk', 'viettel', 'express'],
+    reviews: [
+      {
+        id: 'rev-6-1',
+        authorName: 'Vũ Quốc Bảo',
+        rating: 5,
+        date: '03/11/2026',
+        content: 'Kéo cầm đầm tay, bấm cành ổi ngọt xớt không tốn sức. Rất đáng đồng tiền bát gạo.',
+        verifiedPurchase: true
+      }
+    ]
+  },
+  {
+    id: 'prod-7',
+    title: 'Hạt Giống Hoa Hồng Leo Pháp Eden Rose 85 (Gói 30 Hạt)',
+    category: 'seed',
+    price: 45000,
+    originalPrice: 60000,
+    unit: 'Gói 30 hạt',
+    sellerName: 'CLB Giống Hoa Ngoại Nhập',
+    sellerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    sellerPhone: '0988.112.233',
+    sellerZalo: '0988112233',
+    sellerBadge: 'Chuyên Hoa Ngoại Nhập',
+    sellerResponseRate: 98,
+    sellerJoinYear: 2021,
+    location: 'Đà Lạt, Lâm Đồng',
+    rating: 4.8,
+    reviewsCount: 112,
+    soldCount: 490,
+    imageUrl: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=600&q=80',
+    description: 'Hoa hồng leo hoàng gia Pháp Pierre de Ronsard (Eden 85), cánh kép viền hồng phớt kem lãng mạn, hương thơm dịu nhẹ, leo giàn cổng vòm tuyệt đẹp chịu nhiệt tốt.',
+    specifications: {
+      'Tỷ lệ nảy mầm': '> 85%',
+      'Chiều cao leo': '2.5 - 4.5 mét',
+      'Đường kính hoa': '9 - 11 cm',
+      'Hương thơm': 'Hương trái cây thảo mộc'
+    },
+    stock: 150,
+    shippingCarriers: ['ghtk', 'viettel', 'express'],
+    reviews: [
+      {
+        id: 'rev-7-1',
+        authorName: 'Bùi Ánh Tuyết',
+        rating: 5,
+        date: '06/11/2026',
+        content: 'Hạt giống chất lượng, có giấy hướng dẫn ngâm kích mầm chi tiết đính kèm.',
+        verifiedPurchase: true
+      }
+    ]
+  },
+  {
+    id: 'prod-8',
+    title: 'Đất Sạch Hữu Cơ Cao Cấp Trộn Sẵn Đá Perlite & Trấu Hun (Bao 20 Lít)',
+    category: 'supplies',
+    price: 65000,
+    originalPrice: 80000,
+    unit: 'Bao 20L',
+    sellerName: 'Công Ty Giá Thể Nông Nghiệp Xanh',
+    sellerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+    sellerPhone: '0918.456.789',
+    sellerZalo: '0918456789',
+    sellerBadge: 'Giá Thể Sạch Chuẩn Nông Nghiệp',
+    sellerResponseRate: 95,
+    sellerJoinYear: 2020,
+    location: 'Bình Chánh, TP.HCM',
+    rating: 4.9,
+    reviewsCount: 280,
+    soldCount: 2100,
+    imageUrl: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=600&q=80',
+    description: 'Hỗn hợp đất thịt phù sa đã khử trùng nấm bệnh, phối trộn perlite trắng, trấu hun, xơ dừa lên men và phân trùn quế. Thoát nước cực tốt, tơi xốp không lo nghẹt rễ.',
+    specifications: {
+      'Thể tích': '20 Lít (~10kg)',
+      'Độ pH': '6.2 - 6.8',
+      'Độ EC': '< 1.2 mS/cm',
+      'Thành phần': 'Đất thịt phù sa + Perlite + Mùn dừa + Phân vi sinh'
+    },
+    stock: 400,
+    isOrganic: true,
+    shippingCarriers: ['ghtk', 'viettel', 'pickup'],
+    reviews: [
+      {
+        id: 'rev-8-1',
+        authorName: 'Lý Gia Hưng',
+        rating: 5,
+        date: '10/11/2026',
+        content: 'Đất tơi xốp thơm mùi mùn tự nhiên, trồng dâu tây và hoa hồng thoát nước cực nhanh không đọng vũng.',
+        verifiedPurchase: true
+      }
+    ]
+  },
+  {
+    id: 'prod-9',
+    title: 'Hệ Thống Tưới Nhỏ Giọt Ban Công Tự Động 15 Đầu Phun Tiết Kiệm Nước',
+    category: 'tool',
+    price: 260000,
+    originalPrice: 320000,
+    unit: 'Bộ kit hoàn chỉnh',
+    sellerName: 'Thiết Bị Tưới Thông Minh Miền Nam',
+    sellerAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
+    sellerPhone: '0933.222.111',
+    sellerZalo: '0933222111',
+    sellerBadge: 'Thiết Bị Tưới Chuẩn ISO',
+    sellerResponseRate: 99,
+    sellerJoinYear: 2021,
+    location: 'Quận 7, TP.HCM',
+    rating: 4.8,
+    reviewsCount: 167,
+    soldCount: 520,
+    imageUrl: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80',
+    description: 'Bộ kit tưới nhỏ giọt thông minh kèm 15m dây dẫn PE, 15 béc tưới điều chỉnh lưu lượng, đầu nối ren vòi nước tiêu chuẩn. Giúp bạn an tâm đi công tác du lịch cả tuần cây vẫn đủ nước tươi tốt.',
+    specifications: {
+      'Chiều dài dây dẫn': '15 mét dây phi 6mm UV chống giòn',
+      'Số béc tưới': '15 béc tưới cắm gốc điều chỉnh giọt - xòe',
+      'Áp lực làm việc': '0.5 - 2.5 bar',
+      'Tiết kiệm nước': 'Giảm 70% lượng nước so với tưới tràn'
+    },
+    stock: 95,
+    shippingCarriers: ['ghtk', 'viettel', 'express'],
+    reviews: [
+      {
+        id: 'rev-9-1',
+        authorName: 'Ngô Thùy Trang',
+        rating: 5,
+        date: '01/11/2026',
+        content: 'Lắp ráp theo sơ đồ mất có 15 phút, vặn vòi là 15 chậu rau ban công được tưới nhỏ giọt đều tăm tắp.',
+        verifiedPurchase: true
+      }
+    ]
+  },
+  {
+    id: 'prod-10',
+    title: 'Cây Bonsai Tùng La Hán Mini Cổ Kính Men Rạn Đẹp Mắt',
+    category: 'plant',
+    price: 490000,
+    originalPrice: 650000,
+    unit: 'Chậu gốm men rạn',
+    sellerName: 'Vườn Kiểng Cổ Thụ & Bonsai Nam Bộ',
+    sellerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+    sellerPhone: '0966.333.888',
+    sellerZalo: '0966333888',
+    sellerBadge: 'Nghệ Nhân Bonsai Việt Nam',
+    sellerResponseRate: 97,
+    sellerJoinYear: 2019,
+    location: 'Chợ Lách, Bến Tre',
+    rating: 5.0,
+    reviewsCount: 78,
+    soldCount: 145,
+    imageUrl: 'https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=600&q=80',
+    description: 'Cây Tùng La Hán dáng văn nhân 6 năm tuổi, thân uốn lượn phong trần, mâm tán lá kim tầng bậc đậm chất thiền định. Tượng trưng cho sự trường thọ, uy vũ và hưng thịnh gia đạo.',
+    specifications: {
+      'Chiều cao': '38 cm',
+      'Tuổi cây': '6 năm',
+      'Chậu': 'Gốm men rạn Bát Tràng đắp nổi rồng phượng',
+      'Bảo hành': 'Bảo đảm cây sống khỏe 30 ngày'
+    },
+    stock: 12,
+    shippingCarriers: ['viettel', 'express', 'pickup'],
+    reviews: [
+      {
+        id: 'rev-10-1',
+        authorName: 'Trịnh Hoài Nam',
+        rating: 5,
+        date: '07/11/2026',
+        content: 'Cây đóng khung gỗ vận chuyển về Hà Nội nguyên vẹn từng cành lá kim, rêu phủ gốc xanh mướt.',
+        verifiedPurchase: true
+      }
+    ]
   }
 ];
+
+export const INITIAL_ORDERS: MarketOrder[] = [
+  {
+    id: 'ORD-2026-8891',
+    createdAt: '10/11/2026 14:20',
+    items: [
+      {
+        item: MARKET_ITEMS[2], // Cà chua bi F1
+        quantity: 2,
+        selectedPrice: 35000
+      },
+      {
+        item: MARKET_ITEMS[4], // Phân trùn quế
+        quantity: 1,
+        selectedPrice: 85000
+      }
+    ],
+    buyerName: 'David Khang',
+    buyerPhone: '0988.888.386',
+    buyerAddress: 'Đường Song Hành, Huyện Hóc Môn, TP. Hồ Chí Minh',
+    shippingCarrier: 'ghtk',
+    shippingFee: 25000,
+    paymentMethod: 'vietqr',
+    paymentStatus: 'escrow_holding',
+    orderStatus: 'shipping',
+    subtotal: 155000,
+    discountAmount: 15000,
+    totalAmount: 165000,
+    voucherCode: 'VUONXANH10',
+    escrowProtectionCode: 'ESCROW-NZ8891-SAFE',
+    trackingCode: 'GHTK-VN-88492019',
+    notes: 'Giao giờ hành chính, bọc kỹ gói hạt giống giúp mình nhé!',
+    hasReviewed: false
+  },
+  {
+    id: 'ORD-2026-7732',
+    createdAt: '02/11/2026 09:15',
+    items: [
+      {
+        item: MARKET_ITEMS[1], // Trầu bà lỗ Monstera
+        quantity: 1,
+        selectedPrice: 145000
+      }
+    ],
+    buyerName: 'David Khang',
+    buyerPhone: '0988.888.386',
+    buyerAddress: 'Đường Song Hành, Huyện Hóc Môn, TP. Hồ Chí Minh',
+    shippingCarrier: 'express',
+    shippingFee: 35000,
+    paymentMethod: 'cod',
+    paymentStatus: 'paid',
+    orderStatus: 'delivered',
+    subtotal: 145000,
+    discountAmount: 0,
+    totalAmount: 180000,
+    escrowProtectionCode: 'ESCROW-TR7732-SAFE',
+    trackingCode: 'AHAMOVE-SG-33291',
+    notes: 'Gọi trước khi giao 15 phút.',
+    hasReviewed: true
+  }
+];
+
 
 export const CARE_SERVICES: CareBookingService[] = [
   {
@@ -902,3 +1308,162 @@ export const VIDEO_GUIDES: VideoGuideItem[] = [
     ]
   }
 ];
+
+export const INITIAL_EXPERT_THREADS: ExpertThread[] = [
+  {
+    id: 'thread-exp-1',
+    expertId: 'exp-1',
+    lastMessageAt: '10 phút trước',
+    unreadCount: 1,
+    status: 'active',
+    linkedPlantId: 'plant-4',
+    messages: [
+      {
+        id: 'em-1',
+        threadId: 'thread-exp-1',
+        sender: 'expert',
+        senderName: 'TS. Nguyễn Văn Toàn',
+        senderAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+        content: 'Chào bạn! Tôi là TS. Nguyễn Văn Toàn (Viện Nghiên Cứu Cây Ăn Quả Miền Nam). Bạn có thể gửi ảnh lá hoặc hồ sơ cây trồng từ Vườn Của Tôi để tôi xem trực tiếp và lên phác đồ xử lý bệnh nấm hoặc tưới bón phù hợp nhất nhé.',
+        timestamp: '09:15',
+        isRead: true
+      },
+      {
+        id: 'em-2',
+        threadId: 'thread-exp-1',
+        sender: 'user',
+        senderName: 'Tôi (Nhà nông)',
+        content: 'Chào Tiến sĩ, cây Sầu Riêng Ri6 nhà em đang giai đoạn nuôi trái non 8cm, mấy ngày nay mưa chiều nhiều nên em hơi lo nấm Phytophthora xì mủ thân và rụng trái.',
+        timestamp: '09:20',
+        isRead: true,
+        attachments: [
+          {
+            type: 'plant_report',
+            plantId: 'plant-4',
+            plantName: 'Sầu Riêng Ri6 Cơm Vàng Hạt Lép',
+            summary: 'Sức khỏe 90% · Độ ẩm đất 44% · Đang nuôi trái non 8cm'
+          }
+        ]
+      },
+      {
+        id: 'em-3',
+        threadId: 'thread-exp-1',
+        sender: 'expert',
+        senderName: 'TS. Nguyễn Văn Toàn',
+        senderAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+        content: 'Tôi đã kiểm tra thông số vườn của bạn: độ ẩm đất đang 44% trong khi ngưỡng chuẩn giai đoạn nuôi trái cần duy trì 60-75% ổn định (tránh sốc khô rồi mưa ngập gây rụng trái). Bạn áp dụng ngay phác đồ phòng xì mủ sinh học dưới đây nhé:',
+        timestamp: '09:24',
+        isRead: false,
+        attachments: [
+          {
+            type: 'care_prescription',
+            plantId: 'plant-4',
+            plantName: 'Sầu Riêng Ri6 Cơm Vàng Hạt Lép',
+            title: 'Phác đồ chống sốc nước & ngừa xì mủ trái non',
+            recommendations: [
+              'Tưới giữ ẩm gốc đều đặn 40L/gốc vào sáng sớm, không để đất tụt dưới 55%.',
+              'Tưới hoặc quét gốc chế phẩm Trichoderma kết hợp Humic để ức chế nấm Phytophthora.',
+              'Bổ sung Canxi-Bo qua lá vào sáng mát để dai cuống, hạn chế rụng trái sau mưa đêm.'
+            ],
+            suggestedCareType: 'pest_control'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'thread-exp-2',
+    expertId: 'exp-2',
+    lastMessageAt: 'Hôm qua',
+    unreadCount: 0,
+    status: 'active',
+    linkedPlantId: 'plant-1',
+    messages: [
+      {
+        id: 'em-4',
+        threadId: 'thread-exp-2',
+        sender: 'expert',
+        senderName: 'ThS. Trần Thị Kim Oanh',
+        senderAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+        content: 'Xin chào! Tôi hỗ trợ tư vấn cải tạo đất, phối trộn giá thể hữu cơ, phân trùn quế và vi sinh IMO cho rau ăn quả tại nhà. Bạn cần cân đối dinh dưỡng cho chậu cây nào cứ nhắn cho tôi nhé!',
+        timestamp: 'Hôm qua',
+        isRead: true
+      }
+    ]
+  }
+];
+
+export const INITIAL_EXPERT_QA: ExpertQAQuestion[] = [
+  {
+    id: 'qa-exp-1',
+    title: 'Cà chua bi ra hoa chùm 3 nhưng rụng hoa nhiều do thời tiết nóng ẩm, cách tăng đậu trái?',
+    category: 'nutrition',
+    plantId: 'plant-1',
+    plantName: 'Cà Chua Bi F1 Cherry',
+    authorName: 'Nguyễn Minh Tuấn',
+    location: 'Hóc Môn, TP.HCM',
+    createdAt: '2 giờ trước',
+    content: 'Cây cà chua bi của mình cao 65cm, ra chùm hoa thứ 3 rất sai nhưng mấy hôm nay nắng nóng 32°C rồi chiều mưa nên bị rụng bớt hoa chưa kịp đậu quả. Mình đã bón đạm cá tuần trước. Nhờ kỹ sư tư vấn cách bổ sung phân bón và chăm sóc để giữ hoa đậu quả tối đa.',
+    images: ['https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=500&q=80'],
+    attachedReportSummary: 'Chiều cao: 65cm · 28 lá · Sức khỏe: 92% · Độ ẩm đất: 28%',
+    targetExpertId: 'exp-2',
+    status: 'answered',
+    answers: [
+      {
+        id: 'ans-1',
+        expertId: 'exp-2',
+        expertName: 'ThS. Trần Thị Kim Oanh',
+        expertTitle: 'Kỹ sư Thổ nhưỡng & Nông nghiệp Hữu cơ',
+        expertAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
+        organization: 'Trung tâm Khuyến nông Quốc gia',
+        content: 'Nguyên nhân chính khiến cà chua rụng hoa là cây đang thiếu ẩm đột ngột (độ ẩm đất chỉ còn 28%) kết hợp bón nhiều đạm cá làm cây thiên về phát triển lá, thiếu Canxi-Bo và Kali để thụ phấn.',
+        recommendations: [
+          'Ngừng bón đạm cá trong 10 ngày, chuyển sang bổ sung phân hữu cơ giàu Kali + Lân (hoặc dịch chuối trứng sữa) 7 ngày/lần.',
+          'Phun bổ sung Canxi-Bo sinh học liều nhẹ vào lúc 7h sáng giúp hạt phấn khỏe và dai cuống hoa.',
+          'Duy trì độ ẩm đất 55-70% đều đặn, phủ rơm rạ hoặc xơ dừa trên mặt chậu để tránh đất bốc hơi quá nhanh.',
+          'Rung nhẹ giàn hoa lúc 9h-10h sáng hàng ngày để tăng tỷ lệ tự thụ phấn.'
+        ],
+        followUpDays: 5,
+        createdAt: '1 giờ trước',
+        helpfulCount: 19,
+        isMarkedHelpful: false
+      }
+    ]
+  },
+  {
+    id: 'qa-exp-2',
+    title: 'Lá Monstera mới mở bị rách nhẹ và hơi rũ xuống dù độ ẩm đất vẫn 58%, nguyên nhân do đâu?',
+    category: 'general',
+    plantId: 'plant-2',
+    plantName: 'Trầu Bà Lá Xẻ Nam Mỹ (Monstera)',
+    authorName: 'Lê Thảo Vy',
+    location: 'Quận 7, TP.HCM',
+    createdAt: '1 ngày trước',
+    content: 'Cây Monstera trồng trong phòng khách gần cửa sổ, giá thể xơ dừa + perlite + vỏ thông. Lá mới thứ 7 vừa bung ra xẻ 4 rãnh đẹp nhưng phiến lá còn hơi mềm rũ. Tôi có nên tưới thêm nước hay bón thêm phân ngay không?',
+    images: ['https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=500&q=80'],
+    attachedReportSummary: 'Chiều cao: 58cm · 7 lá · Sức khỏe: 96% · Độ ẩm đất: 58%',
+    targetExpertId: 'exp-3',
+    status: 'resolved',
+    answers: [
+      {
+        id: 'ans-2',
+        expertId: 'exp-3',
+        expertName: 'KS. Đặng Hoàng Nam',
+        expertTitle: 'Chuyên gia Hoa kiểng & Cây cảnh Nội thất',
+        expertAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+        organization: 'Hội Sinh vật cảnh Việt Nam',
+        content: 'Với độ ẩm đất 58% thì bạn TUYỆT ĐỐI không tưới thêm nước nhé! Lá non Monstera mới mở trong 5-7 ngày đầu luôn có mô lá mềm, màu xanh non nhạt và cần thời gian cứng cáp dần.',
+        recommendations: [
+          'Chờ mặt giá thể khô 3-4cm (độ ẩm khoảng 35-40%) mới tưới đợt tiếp theo.',
+          'Đặt cây cách cửa sổ có ánh sáng tán xạ mạnh khoảng 1-1.5m, xoay chậu 90 độ mỗi tuần để tán lá cân đối.',
+          'Sau khi lá non chuyển xanh đậm hoàn toàn (khoảng 7 ngày nữa) mới bón phân tan chậm hoặc đạm rong biển loãng.'
+        ],
+        followUpDays: 7,
+        createdAt: '20 giờ trước',
+        helpfulCount: 27,
+        isMarkedHelpful: true
+      }
+    ]
+  }
+];
+

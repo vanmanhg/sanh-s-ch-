@@ -1,0 +1,271 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Default-Deny Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ==================== GLOBAL HARDENED HELPERS ====================
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(ownerId) {
+      return isSignedIn() && request.auth.uid == ownerId;
+    }
+
+    function isBoundedString(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    function isBoundedStringArray(arr, maxItems, maxItemLen) {
+      return arr is list
+        && arr.size() <= maxItems
+        && (arr.size() == 0 || (arr[0] is string && arr[0].size() <= maxItemLen));
+    }
+
+    function isValidTreatmentStep(step) {
+      return step is map
+        && step.keys().hasAll(['stepNumber', 'title', 'detail', 'timing'])
+        && step.keys().hasOnly(['stepNumber', 'title', 'detail', 'timing'])
+        && step.stepNumber is int && step.stepNumber >= 1 && step.stepNumber <= 20
+        && isBoundedString(step.title, 1, 160)
+        && isBoundedString(step.detail, 1, 600)
+        && isBoundedString(step.timing, 1, 100);
+    }
+
+    // ==================== ENTITY VALIDATION BLUEPRINTS ====================
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['uid', 'displayName', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'displayName', 'photoURL', 'preferredTheme', 'preferredLanguage', 'createdAt', 'updatedAt'])
+        && isValidId(data.uid)
+        && data.uid == request.auth.uid
+        && isBoundedString(data.displayName, 1, 100)
+        && (!('photoURL' in data) || isBoundedString(data.photoURL, 0, 500))
+        && (!('preferredTheme' in data) || data.preferredTheme in ['light', 'dark'])
+        && (!('preferredLanguage' in data) || data.preferredLanguage in ['vi', 'en', 'zh', 'km', 'ja'])
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidDiagnosis(data) {
+      return data.keys().hasAll([
+          'ownerId',
+          'plantName',
+          'diseaseName',
+          'pathogenType',
+          'severity',
+          'confidence',
+          'isHealthy',
+          'causes',
+          'symptoms',
+          'organicTreatment',
+          'chemicalTreatment',
+          'prevention',
+          'status',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'ownerId',
+          'plantId',
+          'plantName',
+          'diseaseName',
+          'pathogenType',
+          'severity',
+          'confidence',
+          'isHealthy',
+          'causes',
+          'symptoms',
+          'treatmentSteps',
+          'organicTreatment',
+          'chemicalTreatment',
+          'prevention',
+          'farmerNotes',
+          'thumbnailDataUrl',
+          'status',
+          'followUpDays',
+          'createdAt',
+          'updatedAt'
+        ])
+        && isValidId(data.ownerId)
+        && data.ownerId == request.auth.uid
+        && (!('plantId' in data) || isBoundedString(data.plantId, 0, 128))
+        && isBoundedString(data.plantName, 1, 120)
+        && isBoundedString(data.diseaseName, 1, 160)
+        && isBoundedString(data.pathogenType, 1, 60)
+        && data.severity in ['Nhẹ', 'Trung bình', 'Nghiêm trọng', 'Khỏe mạnh']
+        && data.confidence is int && data.confidence >= 0 && data.confidence <= 100
+        && data.isHealthy is bool
+        && isBoundedString(data.causes, 0, 1000)
+        && isBoundedStringArray(data.symptoms, 10, 300)
+        && (!('treatmentSteps' in data) || (
+          data.treatmentSteps is list
+          && data.treatmentSteps.size() <= 10
+          && (data.treatmentSteps.size() == 0 || isValidTreatmentStep(data.treatmentSteps[0]))
+        ))
+        && isBoundedStringArray(data.organicTreatment, 10, 400)
+        && isBoundedStringArray(data.chemicalTreatment, 10, 400)
+        && isBoundedStringArray(data.prevention, 10, 300)
+        && (!('farmerNotes' in data) || isBoundedString(data.farmerNotes, 0, 500))
+        && (!('thumbnailDataUrl' in data) || isBoundedString(data.thumbnailDataUrl, 0, 150000))
+        && data.status in ['active', 'treating', 'resolved']
+        && (!('followUpDays' in data) || (data.followUpDays is int && data.followUpDays >= 0 && data.followUpDays <= 365))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidWeatherPreference(data) {
+      return data.keys().hasAll([
+          'uid',
+          'autoPushEnabled',
+          'heatThresholdC',
+          'rainThresholdMm',
+          'windThresholdKmH',
+          'coldThresholdC',
+          'city',
+          'lat',
+          'lng',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid',
+          'autoPushEnabled',
+          'heatThresholdC',
+          'rainThresholdMm',
+          'windThresholdKmH',
+          'coldThresholdC',
+          'city',
+          'lat',
+          'lng',
+          'createdAt',
+          'updatedAt'
+        ])
+        && isValidId(data.uid)
+        && data.uid == request.auth.uid
+        && data.autoPushEnabled is bool
+        && data.heatThresholdC is int && data.heatThresholdC >= 30 && data.heatThresholdC <= 45
+        && data.rainThresholdMm is int && data.rainThresholdMm >= 5 && data.rainThresholdMm <= 200
+        && data.windThresholdKmH is int && data.windThresholdKmH >= 15 && data.windThresholdKmH <= 120
+        && data.coldThresholdC is int && data.coldThresholdC >= 0 && data.coldThresholdC <= 20
+        && isBoundedString(data.city, 1, 120)
+        && (data.lat is number) && data.lat >= -90 && data.lat <= 90
+        && (data.lng is number) && data.lng >= -180 && data.lng <= 180
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    // ==================== COLLECTION RULES ====================
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && isOwner(userId);
+      allow list: if false;
+
+      allow create: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserProfile(incoming())
+        && incoming().uid == userId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserProfile(incoming())
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['preferredTheme', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['preferredLanguage', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['preferredTheme', 'preferredLanguage', 'updatedAt'])
+        );
+
+      allow delete: if false;
+    }
+
+    match /diagnoses/{diagnosisId} {
+      allow get: if isSignedIn() && isValidId(diagnosisId) && isOwner(existing().ownerId);
+      allow list: if isSignedIn() && existing().ownerId == request.auth.uid;
+
+      allow create: if isVerifiedUser()
+        && isValidId(diagnosisId)
+        && isValidDiagnosis(incoming())
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+
+      allow update: if isVerifiedUser()
+        && isValidId(diagnosisId)
+        && isValidDiagnosis(incoming())
+        && isOwner(existing().ownerId)
+        && existing().status != 'resolved'
+        && incoming().ownerId == existing().ownerId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'farmerNotes', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['plantId', 'updatedAt'])
+        );
+
+      allow delete: if isVerifiedUser()
+        && isValidId(diagnosisId)
+        && isOwner(existing().ownerId);
+    }
+
+    match /weatherPreferences/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && isOwner(userId);
+      allow list: if false;
+
+      allow create: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidWeatherPreference(incoming())
+        && incoming().uid == userId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+
+      allow update: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidWeatherPreference(incoming())
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'autoPushEnabled',
+          'heatThresholdC',
+          'rainThresholdMm',
+          'windThresholdKmH',
+          'coldThresholdC',
+          'city',
+          'lat',
+          'lng',
+          'updatedAt'
+        ]);
+
+      allow delete: if false;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { COMMODITY_PRICES } from '../data/mockData';
-import { CommodityPriceItem, FarmTransaction } from '../types';
+import { FarmTransaction } from '../types';
+import { MarketPriceView } from './MarketPriceView';
 import {
   BadgeDollarSign,
   TrendingUp,
@@ -268,71 +268,9 @@ export const FinancePriceView: React.FC = () => {
         </div>
       )}
 
-      {/* VIEW 2: GIÁ NÔNG SẢN THỊ TRƯỜNG & DỰ BÁO */}
+      {/* VIEW 2: GIÁ NÔNG SẢN THỊ TRƯỜNG & DỰ BÁO (D3.JS) */}
       {activeTab === 'market_prices' && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {COMMODITY_PRICES.map(item => (
-              <div
-                key={item.id}
-                className="bg-white dark:bg-zinc-900 rounded-3xl p-5 border border-zinc-200 dark:border-zinc-800 shadow-xs space-y-3.5"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-zinc-400">{item.region}</span>
-                    <h3 className="font-black text-base sm:text-lg text-zinc-900 dark:text-zinc-100">
-                      {item.name}
-                    </h3>
-                    <p className="text-xs text-zinc-500">{item.variety}</p>
-                  </div>
-
-                  <div className="text-right">
-                    <div className="text-xl font-black text-zinc-900 dark:text-zinc-100">
-                      {item.currentPrice.toLocaleString('vi-VN')} {item.unit}
-                    </div>
-                    <div
-                      className={`inline-flex items-center gap-0.5 text-xs font-bold ${
-                        item.changePercent >= 0 ? 'text-emerald-600' : 'text-rose-600'
-                      }`}
-                    >
-                      {item.changePercent >= 0 ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
-                      <span>{item.changePercent >= 0 ? '+' : ''}{item.changePercent}%</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 6-day trend visualization */}
-                <div className="bg-zinc-50 dark:bg-zinc-800/50 p-3 rounded-2xl border border-zinc-200 dark:border-zinc-700/60">
-                  <div className="text-[10px] font-bold text-zinc-500 mb-2">Biến động giá 6 ngày gần nhất:</div>
-                  <div className="flex items-end justify-between h-14 pt-2">
-                    {item.history.map((h, i) => {
-                      const min = Math.min(...item.history.map(x => x.price));
-                      const max = Math.max(...item.history.map(x => x.price));
-                      const percent = Math.max(20, Math.min(100, ((h.price - min) / (max - min || 1)) * 100));
-                      return (
-                        <div key={i} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                          <div
-                            style={{ height: `${percent}%` }}
-                            className="w-full max-w-[16px] rounded-t-sm bg-emerald-500 dark:bg-emerald-400"
-                          />
-                          <span className="text-[9px] text-zinc-400">{h.day}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* AI Advice Box */}
-                <div className="p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-xs text-emerald-950 dark:text-emerald-200 flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <strong>Phân tích thị trường & khuyến nghị thu hoạch:</strong> {item.marketAnalysis}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <MarketPriceView embedded />
       )}
 
       {/* VIEW 3: TÍNH NĂNG SUẤT & DỰ BÁO LÃI VỤ MÙA */}

@@ -19,7 +19,10 @@ import {
   FileText,
   Printer,
   Sliders,
-  Share2
+  Share2,
+  Camera,
+  Image as ImageIcon,
+  Stethoscope
 } from 'lucide-react';
 import { PlantReportPdfModal } from './PlantReportPdfModal';
 import { ShareJournalModal } from './ShareJournalModal';
@@ -27,21 +30,32 @@ import { ShareJournalModal } from './ShareJournalModal';
 interface MyGardenViewProps {
   onGoToIdentify: () => void;
   onNavigateToCommunity?: () => void;
+  onLaunchAR?: (plantName?: string) => void;
+  onAskExpert?: (plant: Plant) => void;
 }
 
-export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNavigateToCommunity }) => {
+export const MyGardenView: React.FC<MyGardenViewProps> = ({
+  onGoToIdentify,
+  onNavigateToCommunity,
+  onLaunchAR,
+  onAskExpert
+}) => {
   const { plants, waterPlant, fertilizePlant, deletePlant, addGrowthEntry, updateSoilMoisture, t } = useApp();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
+  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
+  const selectedPlant = plants.find(p => p.id === selectedPlantId) || null;
+  const setSelectedPlant = (p: Plant | null) => setSelectedPlantId(p ? p.id : null);
   const [selectedPlantForReport, setSelectedPlantForReport] = useState<Plant | null>(null);
   const [selectedPlantForShare, setSelectedPlantForShare] = useState<Plant | null>(null);
   const [showAddLogModal, setShowAddLogModal] = useState<boolean>(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   // New Growth Entry inputs
   const [newHeight, setNewHeight] = useState<number>(30);
   const [newLeafCount, setNewLeafCount] = useState<number>(10);
   const [newHealthScore, setNewHealthScore] = useState<number>(95);
   const [newGrowthNotes, setNewGrowthNotes] = useState<string>('');
+  const [newGrowthPhoto, setNewGrowthPhoto] = useState<string>('');
 
   // Filtering
   const filteredPlants = plants.filter(p => {
@@ -69,6 +83,41 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
     return Math.ceil(diffHours / 24);
   };
 
+  const handleGrowthPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 800;
+        let w = img.width;
+        let h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, w, h);
+          setNewGrowthPhoto(canvas.toDataURL('image/jpeg', 0.8));
+        } else {
+          setNewGrowthPhoto(String(reader.result || ''));
+        }
+      };
+      img.src = String(reader.result || '');
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSaveGrowthEntry = () => {
     if (!selectedPlant) return;
     addGrowthEntry(selectedPlant.id, {
@@ -76,13 +125,12 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
       heightCm: Number(newHeight),
       leafCount: Number(newLeafCount),
       healthScore: Number(newHealthScore),
+      photoUrl: newGrowthPhoto || undefined,
       notes: newGrowthNotes || 'Cập nhật chỉ số sinh trưởng định kỳ'
     });
-    // refresh selected plant from updated state
-    const updated = plants.find(p => p.id === selectedPlant.id);
-    if (updated) setSelectedPlant(updated);
     setShowAddLogModal(false);
     setNewGrowthNotes('');
+    setNewGrowthPhoto('');
   };
 
   return (
@@ -186,6 +234,17 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
             >
               <FileText className="w-4 h-4 text-emerald-600" />
               <span>Xuất Báo Cáo PDF</span>
+            </button>
+          )}
+
+          {onLaunchAR && (
+            <button
+              onClick={() => onLaunchAR()}
+              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
+              title="Mở camera ướm thử cây trong không gian thực với AR 3D"
+            >
+              <Camera className="w-4 h-4 text-purple-200" />
+              <span>Ướm Vườn AR</span>
             </button>
           )}
 
@@ -346,6 +405,19 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
                     Bón Phân
                   </button>
 
+                  {onLaunchAR && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onLaunchAR(plant.name);
+                      }}
+                      className="p-1.5 rounded-lg text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/40 cursor-pointer"
+                      title="Ướm thử cây này vào không gian vườn thực tế (AR 3D)"
+                    >
+                      <Camera className="w-4 h-4" />
+                    </button>
+                  )}
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -397,6 +469,19 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
                   <p className="text-xs italic opacity-90">{selectedPlant.scientificName}</p>
                 </div>
                 <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                  {onLaunchAR && (
+                    <button
+                      onClick={() => {
+                        setSelectedPlant(null);
+                        onLaunchAR(selectedPlant.name);
+                      }}
+                      className="px-3 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-md hover:bg-purple-700 cursor-pointer"
+                      title="Ướm thử cây này vào không gian sân vườn thực tế (AR)"
+                    >
+                      <Camera className="w-4 h-4" />
+                      <span>Ướm Thử AR</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => setSelectedPlantForReport(selectedPlant)}
                     className="px-3 py-2 bg-white text-emerald-900 rounded-xl text-xs font-bold flex items-center gap-1 shadow-md hover:bg-emerald-50 cursor-pointer"
@@ -559,6 +644,43 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
                     AI Đánh giá: Cây đang trong chu kỳ phân hóa chồi lá tích cực, mức hấp thụ phân bón đạt 94%.
                   </p>
                 </div>
+
+                {/* Milestone Entries Timeline with Photos */}
+                <div className="space-y-2 pt-1">
+                  <div className="text-xs font-bold text-zinc-700 dark:text-zinc-300">
+                    Các Mốc Nhật Ký Đã Lưu ({selectedPlant.growthHistory.length})
+                  </div>
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    {[...selectedPlant.growthHistory].reverse().map((entry, idx) => (
+                      <div
+                        key={entry.id || idx}
+                        className="flex items-start gap-3 p-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs"
+                      >
+                        {entry.photoUrl && (
+                          <img
+                            src={entry.photoUrl}
+                            alt={`Mốc ${new Date(entry.date).toLocaleDateString('vi-VN')}`}
+                            referrerPolicy="no-referrer"
+                            className="w-12 h-12 rounded-lg object-cover border border-zinc-200 dark:border-zinc-700 shrink-0"
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-bold text-zinc-800 dark:text-zinc-200">
+                              {new Date(entry.date).toLocaleDateString('vi-VN')}
+                            </span>
+                            <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 tabular-nums">
+                              {entry.heightCm}cm · {entry.leafCount} lá · {entry.healthScore}%
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                            {entry.notes || 'Sinh trưởng ổn định'}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* TIMELINE OF CARE LOGS */}
@@ -592,22 +714,58 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-850 flex items-center justify-between">
+            <div className="p-4 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                {confirmDeleteId === selectedPlant.id ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-rose-600 font-bold">Xóa cây này?</span>
+                    <button
+                      onClick={() => {
+                        deletePlant(selectedPlant.id);
+                        setConfirmDeleteId(null);
+                        setSelectedPlant(null);
+                      }}
+                      className="px-2.5 py-1 bg-rose-600 text-white rounded-lg text-xs font-bold cursor-pointer"
+                    >
+                      Xác nhận xóa
+                    </button>
+                    <button
+                      onClick={() => setConfirmDeleteId(null)}
+                      className="px-2 py-1 bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-200 rounded-lg text-xs font-semibold cursor-pointer"
+                    >
+                      Hủy
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmDeleteId(selectedPlant.id)}
+                    className="text-xs text-rose-600 hover:text-rose-700 flex items-center gap-1 font-semibold cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Xóa cây này
+                  </button>
+                )}
+
+                {onAskExpert && (
+                  <button
+                    onClick={() => {
+                      const target = selectedPlant;
+                      setSelectedPlant(null);
+                      onAskExpert(target);
+                    }}
+                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 font-bold cursor-pointer"
+                  >
+                    <Stethoscope className="w-4 h-4" />
+                    Hỏi Chuyên Gia Về Cây Này
+                  </button>
+                )}
+              </div>
               <button
                 onClick={() => {
-                  if (confirm(`Bạn có chắc muốn xóa cây ${selectedPlant.name} khỏi vườn?`)) {
-                    deletePlant(selectedPlant.id);
-                    setSelectedPlant(null);
-                  }
+                  setConfirmDeleteId(null);
+                  setSelectedPlant(null);
                 }}
-                className="text-xs text-rose-600 hover:text-rose-700 flex items-center gap-1 font-semibold"
-              >
-                <Trash2 className="w-4 h-4" />
-                Xóa cây này
-              </button>
-              <button
-                onClick={() => setSelectedPlant(null)}
-                className="px-4 py-2 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-bold rounded-xl hover:bg-zinc-300"
+                className="px-4 py-2 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-bold rounded-xl hover:bg-zinc-300 cursor-pointer"
               >
                 {t('close')}
               </button>
@@ -670,6 +828,40 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
 
               <div>
                 <label className="font-semibold block mb-1 text-zinc-700 dark:text-zinc-300">
+                  Ảnh chụp thực tế cột mốc (đưa vào báo cáo PDF)
+                </label>
+                <div className="flex items-center gap-3">
+                  <label className="px-3 py-2 rounded-xl border border-dashed border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer hover:bg-emerald-100/60">
+                    <ImageIcon className="w-4 h-4" />
+                    <span>{newGrowthPhoto ? 'Đổi ảnh cột mốc' : 'Chọn ảnh từ thiết bị'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleGrowthPhotoUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  {newGrowthPhoto && (
+                    <div className="relative">
+                      <img
+                        src={newGrowthPhoto}
+                        alt="Preview"
+                        className="w-12 h-12 rounded-xl object-cover border border-emerald-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setNewGrowthPhoto('')}
+                        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center text-[10px] cursor-pointer"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="font-semibold block mb-1 text-zinc-700 dark:text-zinc-300">
                   Ghi chú quan sát (màu lá, nụ hoa, đọt non...)
                 </label>
                 <textarea
@@ -684,14 +876,17 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
 
             <div className="flex gap-2 pt-2">
               <button
-                onClick={() => setShowAddLogModal(false)}
-                className="flex-1 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold text-xs"
+                onClick={() => {
+                  setShowAddLogModal(false);
+                  setNewGrowthPhoto('');
+                }}
+                className="flex-1 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold text-xs cursor-pointer"
               >
                 Hủy bỏ
               </button>
               <button
                 onClick={handleSaveGrowthEntry}
-                className="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700"
+                className="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 cursor-pointer"
               >
                 Lưu Số Liệu
               </button>
@@ -705,6 +900,7 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({ onGoToIdentify, onNa
         <PlantReportPdfModal
           plant={selectedPlantForReport}
           onClose={() => setSelectedPlantForReport(null)}
+          onSendToExpert={onAskExpert}
         />
       )}
 

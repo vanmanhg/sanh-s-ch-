@@ -1,0 +1,260 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public-safe authenticated gardener profile stored under /users/{userId} without PII.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID matching document ID.",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name of the gardener.",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Optional avatar URL.",
+          "maxLength": 500
+        },
+        "preferredTheme": {
+          "type": "string",
+          "description": "User's persisted UI theme mode for day or night-time gardening.",
+          "enum": ["light", "dark"],
+          "maxLength": 10
+        },
+        "preferredLanguage": {
+          "type": "string",
+          "description": "User's persisted UI language preference across up to five supported languages.",
+          "enum": ["vi", "en", "zh", "km", "ja"],
+          "maxLength": 10
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when profile was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when profile was last updated."
+        }
+      },
+      "required": ["uid", "displayName", "createdAt", "updatedAt"]
+    },
+    "DiseaseDiagnosis": {
+      "title": "DiseaseDiagnosis",
+      "description": "AI-powered plant disease detection result and treatment record owned by a user.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "UID of the user who created the diagnosis.",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "plantId": {
+          "type": "string",
+          "description": "Optional linked garden plant ID.",
+          "maxLength": 128
+        },
+        "plantName": {
+          "type": "string",
+          "description": "Identified plant name.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "diseaseName": {
+          "type": "string",
+          "description": "Identified disease or pest condition.",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "pathogenType": {
+          "type": "string",
+          "description": "Type of pathogen or physiological issue.",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "severity": {
+          "type": "string",
+          "description": "Severity level of the disease.",
+          "enum": ["Nhẹ", "Trung bình", "Nghiêm trọng", "Khỏe mạnh"],
+          "maxLength": 30
+        },
+        "confidence": {
+          "type": "integer",
+          "description": "AI confidence percentage from 0 to 100."
+        },
+        "isHealthy": {
+          "type": "boolean",
+          "description": "Whether the plant appears healthy."
+        },
+        "causes": {
+          "type": "string",
+          "description": "Root causes of the condition.",
+          "maxLength": 1000
+        },
+        "symptoms": {
+          "type": "array",
+          "description": "Bounded list of observed symptoms (max 10)."
+        },
+        "treatmentSteps": {
+          "type": "array",
+          "description": "Bounded list of structured treatment steps (max 10)."
+        },
+        "organicTreatment": {
+          "type": "array",
+          "description": "Bounded list of biological and organic remedies (max 10)."
+        },
+        "chemicalTreatment": {
+          "type": "array",
+          "description": "Bounded list of targeted plant protection options (max 10)."
+        },
+        "prevention": {
+          "type": "array",
+          "description": "Bounded list of prevention steps (max 10)."
+        },
+        "farmerNotes": {
+          "type": "string",
+          "description": "User symptoms note or treatment progress note.",
+          "maxLength": 500
+        },
+        "thumbnailDataUrl": {
+          "type": "string",
+          "description": "Compact compressed JPEG preview thumbnail of the analyzed plant photo.",
+          "maxLength": 150000
+        },
+        "status": {
+          "type": "string",
+          "description": "Treatment lifecycle status.",
+          "enum": ["active", "treating", "resolved"],
+          "maxLength": 20
+        },
+        "followUpDays": {
+          "type": "integer",
+          "description": "Recommended follow-up check interval in days."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of diagnosis creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update."
+        }
+      },
+      "required": [
+        "ownerId",
+        "plantName",
+        "diseaseName",
+        "pathogenType",
+        "severity",
+        "confidence",
+        "isHealthy",
+        "causes",
+        "symptoms",
+        "organicTreatment",
+        "chemicalTreatment",
+        "prevention",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "WeatherPreference": {
+      "title": "WeatherPreference",
+      "description": "User's extreme-weather alert thresholds, garden coordinates, and push notification preferences stored at /weatherPreferences/{userId}.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID matching document ID.",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "autoPushEnabled": {
+          "type": "boolean",
+          "description": "Whether extreme weather push notifications are enabled."
+        },
+        "heatThresholdC": {
+          "type": "integer",
+          "description": "Extreme heatwave trigger threshold in Celsius (30..45)."
+        },
+        "rainThresholdMm": {
+          "type": "integer",
+          "description": "Heavy rain/storm trigger threshold in mm (5..200)."
+        },
+        "windThresholdKmH": {
+          "type": "integer",
+          "description": "High wind gust trigger threshold in km/h (15..120)."
+        },
+        "coldThresholdC": {
+          "type": "integer",
+          "description": "Frost/cold snap trigger threshold in Celsius (0..20)."
+        },
+        "city": {
+          "type": "string",
+          "description": "Selected region or garden locality name.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "lat": {
+          "type": "number",
+          "description": "Garden latitude (-90..90)."
+        },
+        "lng": {
+          "type": "number",
+          "description": "Garden longitude (-180..180)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when preference was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when preference was last updated."
+        }
+      },
+      "required": [
+        "uid",
+        "autoPushEnabled",
+        "heatThresholdC",
+        "rainThresholdMm",
+        "windThresholdKmH",
+        "coldThresholdC",
+        "city",
+        "lat",
+        "lng",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Authenticated user profile documents keyed by Firebase Auth UID."
+    },
+    "/diagnoses/{diagnosisId}": {
+      "schema": { "$ref": "#/entities/DiseaseDiagnosis" },
+      "description": "AI plant disease diagnoses and treatment records owned by authenticated users."
+    },
+    "/weatherPreferences/{userId}": {
+      "schema": { "$ref": "#/entities/WeatherPreference" },
+      "description": "Extreme weather threshold and push alert settings owned by authenticated users."
+    }
+  }
+}

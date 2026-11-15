@@ -12,7 +12,10 @@ import {
   Map,
   BadgeDollarSign,
   BookOpen,
-  CalendarCheck
+  CalendarCheck,
+  CalendarClock,
+  Camera,
+  TrendingUp
 } from 'lucide-react';
 
 interface NavigationProps {
@@ -21,7 +24,7 @@ interface NavigationProps {
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
-  const { t, plants, seedItems } = useApp();
+  const { t, plants, seedItems, unreadExpertCount } = useApp();
 
   const plantsNeedingWater = plants.filter(p => {
     const last = new Date(p.lastWatered).getTime();
@@ -38,6 +41,18 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
       icon: Flower2,
       badge: plantsNeedingWater.length > 0 ? `${plantsNeedingWater.length}` : null,
       badgeColor: 'bg-sky-500 text-white'
+    },
+    {
+      id: 'ar',
+      label: t('navAR'),
+      icon: Camera,
+      isAi: true
+    },
+    {
+      id: 'care-planner',
+      label: t('navCarePlanner'),
+      icon: CalendarClock,
+      isAi: true
     },
     {
       id: 'identify',
@@ -80,6 +95,11 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
       icon: ShoppingBag
     },
     {
+      id: 'market-prices',
+      label: t('navMarketPrices'),
+      icon: TrendingUp
+    },
+    {
       id: 'map',
       label: t('navMap'),
       icon: Map
@@ -97,7 +117,9 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
     {
       id: 'services',
       label: t('navServices'),
-      icon: CalendarCheck
+      icon: CalendarCheck,
+      badge: unreadExpertCount > 0 ? `${unreadExpertCount}` : null,
+      badgeColor: 'bg-rose-500 text-white'
     }
   ];
 

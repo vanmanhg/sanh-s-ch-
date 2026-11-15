@@ -1,3 +1,20 @@
+export type LanguageCode = 'vi' | 'en' | 'zh' | 'km' | 'ja';
+
+export interface LanguageOption {
+  code: LanguageCode;
+  label: string;
+  flag: string;
+  region: string;
+}
+
+export const SUPPORTED_LANGUAGES: LanguageOption[] = [
+  { code: 'vi', label: 'Tiếng Việt', flag: '🇻🇳', region: 'Việt Nam' },
+  { code: 'en', label: 'English', flag: '🇬🇧', region: 'Global' },
+  { code: 'zh', label: '中文 (简体)', flag: '🇨🇳', region: '中国 / 华人' },
+  { code: 'km', label: 'ភាសាខ្មែរ', flag: '🇰🇭', region: 'កម្ពុជា / Mekong' },
+  { code: 'ja', label: '日本語', flag: '🇯🇵', region: '日本 / Smart Agri' }
+];
+
 export const translations = {
   vi: {
     appName: 'Nông Trợ Xanh AI',
@@ -14,6 +31,9 @@ export const translations = {
     navFinance: 'Tài Chính & Giá Cả',
     navLibrary: 'Thư Viện & Video',
     navServices: 'Dịch Vụ & Chuyên Gia',
+    navCarePlanner: 'Lập Lịch Tự Động',
+    navAR: 'Ướm Vườn AR',
+    navMarketPrices: 'Giá Nông Sản',
 
     // Quick Stats
     totalPlants: 'Tổng số cây',
@@ -41,12 +61,19 @@ export const translations = {
     offlineMode: 'Đang hoạt động ngoại tuyến',
     offlineDesc: 'Dữ liệu được lưu trữ an toàn trên thiết bị của bạn',
     onlineMode: 'Đã kết nối trực tuyến',
+    offlineCacheTitle: 'Quản Lý Dữ Liệu Ngoại Tuyến',
+    cacheSavedReady: 'Dữ liệu đã lưu cục bộ sẵn sàng',
+    simulateOffline: 'Mô phỏng ngắt mạng',
 
     // Voice
     voiceListening: 'Đang lắng nghe giọng nói của bạn...',
-    voiceClickToSpeak: 'Bấm micro để nói câu hỏi nông nghiệp',
+    voiceClickToSpeak: 'Bấm micro để nói câu hỏi',
     voiceStop: 'Dừng ghi âm',
     voiceSpeakOut: 'Đọc to câu trả lời',
+    voiceAutoSpeak: 'Tự động đọc giọng nói (Rảnh tay)',
+    voiceSpeed: 'Tốc độ giọng đọc',
+    voiceHandsFree: 'Chế độ rảnh tay khi làm vườn',
+    voiceAssistant: 'Trợ lý Giọng nói',
 
     // Market & Seeds
     buyNow: 'Mua ngay',
@@ -64,10 +91,24 @@ export const translations = {
     commodityPrices: 'Biến động giá nông sản hôm nay',
     priceForecast: 'Dự báo xu hướng',
 
-    // Light / Dark
+    // Light / Dark & Settings
+    displayTheme: 'Giao diện hiển thị',
     lightMode: 'Giao diện Sáng',
     darkMode: 'Giao diện Tối',
-    language: 'Ngôn ngữ'
+    themeSystem: 'Theo hệ thống',
+    themeDay: 'Sáng',
+    themeNight: 'Tối',
+    switchToDark: 'Chuyển sang Giao diện Tối (làm vườn ban đêm)',
+    switchToLight: 'Chuyển sang Giao diện Sáng (ban ngày)',
+    language: 'Ngôn ngữ',
+    settings: 'Cài đặt giao diện & ngôn ngữ',
+    quickHelp: 'Hỏi nhanh Bác sĩ AI',
+    signIn: 'Đăng nhập',
+    signOut: 'Đăng xuất',
+    syncedCloud: 'Đã đồng bộ Firebase Cloud',
+    onLabel: 'Bật',
+    offLabel: 'Tắt',
+    detailsBtn: 'Chi tiết'
   },
   en: {
     appName: 'GreenFarm AI',
@@ -84,6 +125,9 @@ export const translations = {
     navFinance: 'Finance & Prices',
     navLibrary: 'Library & Video',
     navServices: 'Services & Experts',
+    navCarePlanner: 'Auto Care Planner',
+    navAR: 'AR Garden',
+    navMarketPrices: 'Market Prices',
 
     // Quick Stats
     totalPlants: 'Total Plants',
@@ -111,12 +155,19 @@ export const translations = {
     offlineMode: 'Offline Mode Active',
     offlineDesc: 'Your data is safely stored locally on device',
     onlineMode: 'Connected Online',
+    offlineCacheTitle: 'Local Offline Data Storage',
+    cacheSavedReady: 'Local offline data is 100% ready',
+    simulateOffline: 'Simulate Offline Mode',
 
     // Voice
     voiceListening: 'Listening to your voice...',
     voiceClickToSpeak: 'Tap microphone to speak',
     voiceStop: 'Stop listening',
     voiceSpeakOut: 'Read aloud',
+    voiceAutoSpeak: 'Auto speak responses (Hands-free)',
+    voiceSpeed: 'Reading Speed',
+    voiceHandsFree: 'Hands-free Gardening Mode',
+    voiceAssistant: 'Voice Assistant',
 
     // Market & Seeds
     buyNow: 'Buy Now',
@@ -134,9 +185,305 @@ export const translations = {
     commodityPrices: 'Daily Commodity Market',
     priceForecast: 'Price Trend Forecast',
 
-    // Light / Dark
+    // Light / Dark & Settings
+    displayTheme: 'Display Theme',
     lightMode: 'Light Mode',
     darkMode: 'Dark Mode',
-    language: 'Language'
+    themeSystem: 'System Auto',
+    themeDay: 'Light',
+    themeNight: 'Dark',
+    switchToDark: 'Switch to Dark Mode for night-time gardening',
+    switchToLight: 'Switch to Light Mode for daytime visibility',
+    language: 'Language',
+    settings: 'Theme & Language Settings',
+    quickHelp: 'Quick Ask AI Doctor',
+    signIn: 'Sign In',
+    signOut: 'Sign Out',
+    syncedCloud: 'Synced to Firebase Cloud',
+    onLabel: 'On',
+    offLabel: 'Off',
+    detailsBtn: 'Details'
+  },
+  zh: {
+    appName: '绿色农园 AI',
+    tagline: '智能园艺与智慧农业助手',
+    navGarden: '我的花园',
+    navIdentify: '植物识别',
+    navDiagnosis: '病虫害诊断',
+    navChatbot: '绿色植保医生',
+    navWeather: '农情天气',
+    navCommunity: '农友论坛',
+    navSeeds: '免费种子站',
+    navMarket: '农产绿植市集',
+    navMap: '农资农场地图',
+    navFinance: '农财收支与行情',
+    navLibrary: '知识库与视频',
+    navServices: '专家与农事服务',
+    navCarePlanner: '自动养护计划',
+    navAR: 'AR实景花园',
+    navMarketPrices: '农产品行情',
+
+    // Quick Stats
+    totalPlants: '植物总数',
+    needsWaterToday: '今日待浇水',
+    healthyRate: '健康良好率',
+    weatherTemp: '实时气温',
+
+    // Actions
+    waterAll: '标记今日已全部浇水',
+    addPlantBtn: '添加新植物',
+    takePhoto: '拍照识别',
+    uploadPhoto: '从相册上传',
+    analyzingAI: 'AI正在精准分析...',
+    identifyResult: '植物识别结果',
+    diagnosisResult: '病虫害诊断报告',
+    addToGarden: '添加到我的花园',
+    viewDetails: '查看详情',
+    close: '关闭',
+    save: '保存更改',
+    cancel: '取消',
+    search: '快速搜索...',
+    filter: '筛选条件',
+
+    // Offline / Sync
+    offlineMode: '当前为离线模式',
+    offlineDesc: '所有农事数据已安全保存在本地设备',
+    onlineMode: '在线连接正常',
+    offlineCacheTitle: '离线本地数据存储',
+    cacheSavedReady: '离线病虫害数据已100%缓存',
+    simulateOffline: '模拟离线无网环境',
+
+    // Voice
+    voiceListening: '正在聆听您的语音提问...',
+    voiceClickToSpeak: '点击麦克风开始说话',
+    voiceStop: '停止录音',
+    voiceSpeakOut: '朗读解答',
+    voiceAutoSpeak: '自动语音朗读（免提农事）',
+    voiceSpeed: '语速设置',
+    voiceHandsFree: '手脏免提园艺模式',
+    voiceAssistant: '语音助手',
+
+    // Market & Seeds
+    buyNow: '立即订购',
+    contactZalo: '在线咨询',
+    contactCall: '拨打电话',
+    claimSeed: '免费申领种子',
+    giveSeed: '发布赠送种子',
+
+    // Finance & Yield
+    totalIncome: '农作总收入',
+    totalExpense: '生产总支出',
+    netProfit: '净利润',
+    addTransaction: '记一笔收支',
+    exportReport: '导出财务报表 (CSV)',
+    commodityPrices: '今日农产品价格走势',
+    priceForecast: '后市价格预测',
+
+    // Light / Dark & Settings
+    displayTheme: '显示主题',
+    lightMode: '明亮模式',
+    darkMode: '深色暗黑模式',
+    themeSystem: '跟随系统',
+    themeDay: '日间',
+    themeNight: '夜间',
+    switchToDark: '切换到夜间深色模式（方便夜晚园艺）',
+    switchToLight: '切换到日间明亮模式',
+    language: '语言选择',
+    settings: '主题、语言与语音设置',
+    quickHelp: '快速咨询植保AI',
+    signIn: '登录',
+    signOut: '退出登录',
+    syncedCloud: '已同步至 Firebase 云端',
+    onLabel: '开启',
+    offLabel: '关闭',
+    detailsBtn: '详情'
+  },
+  km: {
+    appName: 'កសិដ្ឋានបៃតង AI',
+    tagline: 'ជំនួយការដាំដុះ និងថែសួនឆ្លាតវៃ',
+    navGarden: 'សួនរបស់ខ្ញុំ',
+    navIdentify: 'សម្គាល់រុក្ខជាតិ',
+    navDiagnosis: 'ពិនិត្យជំងឺរុក្ខជាតិ',
+    navChatbot: 'គ្រូពេទ្យរុក្ខជាតិ AI',
+    navWeather: 'អាកាសធាតុកសិកម្ម',
+    navCommunity: 'សហគមន៍កសិករ',
+    navSeeds: 'គ្រាប់ពូជឥតគិតថ្លៃ',
+    navMarket: 'ផ្សារកសិផល',
+    navMap: 'ផែនទីកសិកម្ម',
+    navFinance: 'ហិរញ្ញវត្ថុ & តម្លៃ',
+    navLibrary: 'បណ្ណាល័យ & វីដេអូ',
+    navServices: 'សេវាកម្មកសិកម្ម',
+    navCarePlanner: 'កាលវិភាគស្វ័យប្រវត្តិ',
+    navAR: 'សួនរុក្ខជាតិ AR',
+    navMarketPrices: 'តម្លៃកសិផលប្រចាំថ្ងៃ',
+
+    // Quick Stats
+    totalPlants: 'ចំនួនរុក្ខជាតិសរុប',
+    needsWaterToday: 'ត្រូវការស្រោចទឹកថ្ងៃនេះ',
+    healthyRate: 'អត្រាសុខភាពល្អ',
+    weatherTemp: 'សីតុណ្ហភាពបច្ចុប្បន្ន',
+
+    // Actions
+    waterAll: 'បានស្រោចទឹកទាំងអស់',
+    addPlantBtn: 'បន្ថែមរុក្ខជាតិថ្មី',
+    takePhoto: 'ថតរូបភាព',
+    uploadPhoto: 'ផ្ទុកឡើងរូបភាព',
+    analyzingAI: 'AI កំពុងវិភាគ...',
+    identifyResult: 'លទ្ធផលសម្គាល់រុក្ខជាតិ',
+    diagnosisResult: 'លទ្ធផលរោគវិនិច្ឆ័យជំងឺ',
+    addToGarden: 'បន្ថែមទៅសួនរបស់ខ្ញុំ',
+    viewDetails: 'មើលលម្អិត',
+    close: 'បិទ',
+    save: 'រក្សាទុក',
+    cancel: 'បោះបង់',
+    search: 'ស្វែងរក...',
+    filter: 'តម្រង',
+
+    // Offline / Sync
+    offlineMode: 'កំពុងដំណើរការក្រៅបណ្តាញ',
+    offlineDesc: 'ទិន្នន័យត្រូវបានរក្សាទុកក្នុងឧបករណ៍',
+    onlineMode: 'ភ្ជាប់អ៊ីនធឺណិតធម្មតា',
+    offlineCacheTitle: 'ការគ្រប់គ្រងទិន្នន័យក្រៅបណ្តាញ',
+    cacheSavedReady: 'ទិន្នន័យក្រៅបណ្តាញរួចរាល់ 100%',
+    simulateOffline: 'សាកល្បងក្រៅបណ្តាញ',
+
+    // Voice
+    voiceListening: 'កំពុងស្តាប់សំឡេងរបស់អ្នក...',
+    voiceClickToSpeak: 'ចុចមីក្រូហ្វូនដើម្បីនិយាយ',
+    voiceStop: 'បញ្ឈប់ការកត់សំឡេង',
+    voiceSpeakOut: 'អានចម្លើយឮៗ',
+    voiceAutoSpeak: 'អានចម្លើយដោយស្វ័យប្រវត្តិ',
+    voiceSpeed: 'ល្បឿនសំឡេង',
+    voiceHandsFree: 'របៀបសេរីដៃពេលធ្វើការ',
+    voiceAssistant: 'ជំនួយការសំឡេង',
+
+    // Market & Seeds
+    buyNow: 'ទិញឥឡូវនេះ',
+    contactZalo: 'ជជែកពិភាក្សា',
+    contactCall: 'ទូរស័ព្ទ',
+    claimSeed: 'ទទួលគ្រាប់ពូជឥតគិតថ្លៃ',
+    giveSeed: 'ចែករំលែកគ្រាប់ពូជ',
+
+    // Finance & Yield
+    totalIncome: 'ចំណូលសរុប',
+    totalExpense: 'ចំណាយសរុប',
+    netProfit: 'ប្រាក់ចំណេញសុទ្ធ',
+    addTransaction: 'កត់ត្រាចំណូល/ចំណាយ',
+    exportReport: 'ទាញយករបាយការណ៍ (CSV)',
+    commodityPrices: 'តម្លៃកសិផលថ្ងៃនេះ',
+    priceForecast: 'ការព្យាករណ៍តម្លៃ',
+
+    // Light / Dark & Settings
+    displayTheme: 'ទម្រង់បង្ហាញ',
+    lightMode: 'ទម្រង់ភ្លឺ',
+    darkMode: 'ទម្រង់ងងឹត',
+    themeSystem: 'តាមប្រព័ន្ធ',
+    themeDay: 'ភ្លឺ',
+    themeNight: 'ងងឹត',
+    switchToDark: 'ប្តូរទៅទម្រង់ងងឹតសម្រាប់ការថែសួនពេលយប់',
+    switchToLight: 'ប្តូរទៅទម្រង់ភ្លឺសម្រាប់ពេលថ្ងៃ',
+    language: 'ភាសា',
+    settings: 'ការកំណត់ទម្រង់ និងភាសា',
+    quickHelp: 'សួរសំណួរទៅ AI',
+    signIn: 'ចូលគណនី',
+    signOut: 'ចាកចេញ',
+    syncedCloud: 'បានធ្វើសមកាលកម្មទៅ Firebase Cloud',
+    onLabel: 'បើក',
+    offLabel: 'បិទ',
+    detailsBtn: 'លម្អិត'
+  },
+  ja: {
+    appName: 'グリーンファーム AI',
+    tagline: 'スマート家庭菜園・農業アシスタント',
+    navGarden: 'マイガーデン',
+    navIdentify: 'AI植物判定',
+    navDiagnosis: '病害虫クリニック',
+    navChatbot: '植物ドクター AI',
+    navWeather: '農業気象',
+    navCommunity: 'コミュニティ',
+    navSeeds: '無料タネ交換',
+    navMarket: '農産・園芸市場',
+    navMap: '農業マップ',
+    navFinance: '収支・相場価格',
+    navLibrary: '栽培ガイド・動画',
+    navServices: '専門家・相談',
+    navCarePlanner: '自動ケア計画',
+    navAR: 'ARガーデン配置',
+    navMarketPrices: '農産物相場',
+
+    // Quick Stats
+    totalPlants: '登録植物数',
+    needsWaterToday: '本日の水やり',
+    healthyRate: '健康維持率',
+    weatherTemp: '現在の気温',
+
+    // Actions
+    waterAll: 'すべて水やり済みにする',
+    addPlantBtn: '新しい植物を追加',
+    takePhoto: 'カメラで撮影',
+    uploadPhoto: '画像をアップロード',
+    analyzingAI: 'AIが解析中...',
+    identifyResult: '植物の識別結果',
+    diagnosisResult: '病害虫の診断結果',
+    addToGarden: 'マイガーデンに追加',
+    viewDetails: '詳細を見る',
+    close: '閉じる',
+    save: '変更を保存',
+    cancel: 'キャンセル',
+    search: '検索...',
+    filter: '絞り込み',
+
+    // Offline / Sync
+    offlineMode: 'オフラインモード稼働中',
+    offlineDesc: 'データは端末内に安全に保存されています',
+    onlineMode: 'オンライン接続中',
+    offlineCacheTitle: 'オフラインデータ管理',
+    cacheSavedReady: 'ローカルキャッシュ準備完了 (100%)',
+    simulateOffline: 'オフライン動作をテスト',
+
+    // Voice
+    voiceListening: '音声を聞き取っています...',
+    voiceClickToSpeak: 'マイクを押して質問する',
+    voiceStop: '録音を停止',
+    voiceSpeakOut: '音声で読み上げる',
+    voiceAutoSpeak: '自動音声読み上げ (ハンズフリー)',
+    voiceSpeed: '読み上げ速度',
+    voiceHandsFree: '作業中のハンズフリーモード',
+    voiceAssistant: '音声アシスタント',
+
+    // Market & Seeds
+    buyNow: '今すぐ購入',
+    contactZalo: 'チャット相談',
+    contactCall: '電話する',
+    claimSeed: '無料でタネを受け取る',
+    giveSeed: 'タネを出品する',
+
+    // Finance & Yield
+    totalIncome: '総収入',
+    totalExpense: '栽培コスト合計',
+    netProfit: '純利益',
+    addTransaction: '収支を記録',
+    exportReport: '財務レポート出力 (CSV)',
+    commodityPrices: '本日の農産物相場',
+    priceForecast: '価格トレンド予測',
+
+    // Light / Dark & Settings
+    displayTheme: '表示テーマ',
+    lightMode: 'ライトモード',
+    darkMode: 'ダークモード',
+    themeSystem: 'システム連動',
+    themeDay: 'ライト',
+    themeNight: 'ダーク',
+    switchToDark: 'ダークモードに切り替え（夜間作業向け）',
+    switchToLight: 'ライトモードに切り替え（日中向け）',
+    language: '言語',
+    settings: 'テーマ・言語・音声設定',
+    quickHelp: '植物ドクターAIに質問',
+    signIn: 'ログイン',
+    signOut: 'ログアウト',
+    syncedCloud: 'Firebase Cloud に同期済み',
+    onLabel: 'オン',
+    offLabel: 'オフ',
+    detailsBtn: '詳細'
   }
 };
