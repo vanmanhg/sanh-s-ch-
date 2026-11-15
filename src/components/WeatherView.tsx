@@ -64,6 +64,8 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
     pushNotificationPermission,
     plants,
     addCareLog,
+    t,
+    localeTag,
   } = useApp();
   const { user } = useFirebaseAuth();
 
@@ -187,12 +189,12 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
       : 'Nhiều mây ôn hòa';
 
   const syncedTimeFormatted = lastWeatherSyncAt
-    ? new Date(lastWeatherSyncAt).toLocaleTimeString('vi-VN', {
+    ? new Date(lastWeatherSyncAt).toLocaleTimeString(localeTag, {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
       })
-    : 'Vừa cập nhật';
+    : t('onlineMode');
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-6 py-6 space-y-6">
@@ -201,10 +203,10 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
         <div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
             <CloudSun className="w-7 h-7 text-amber-500" />
-            <span>Thời Tiết Thời Gian Thực & Cảnh Báo Khắc Nghiệt</span>
+            <span>{t('weatherTitle')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
-            Đồng bộ dữ liệu khí tượng trực tiếp • Cảnh báo đẩy mưa bão, nắng nóng, gió giật và rét đậm bảo vệ cây trồng
+            {t('weatherSubtitle')}
           </p>
         </div>
 
@@ -230,7 +232,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
             className="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 hover:bg-sky-100 dark:hover:bg-sky-900 flex items-center gap-1 cursor-pointer disabled:opacity-60"
           >
             <NavigationIcon className="w-3.5 h-3.5" />
-            <span>{isLocating ? 'Đang định vị...' : 'GPS Vườn Tôi'}</span>
+            <span>{isLocating ? t('weatherLocatingBtn') : t('weatherGpsBtn')}</span>
           </button>
         </div>
       </div>
@@ -285,29 +287,27 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-black/25 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-xs">
             <div className="space-y-0.5">
               <span className="text-white/75 text-[10px] flex items-center gap-1">
-                <Droplets className="w-3 h-3 text-sky-300" /> Độ ẩm
+                <Droplets className="w-3 h-3 text-sky-300" /> {t('weatherHumLabel')}
               </span>
               <span className="font-extrabold text-sm">{weather.humidity}%</span>
             </div>
             <div className="space-y-0.5">
               <span className="text-white/75 text-[10px] flex items-center gap-1">
-                <CloudRain className="w-3 h-3 text-sky-300" /> Lượng mưa
+                <CloudRain className="w-3 h-3 text-sky-300" /> {t('weatherRainLabel')}
               </span>
               <span className="font-extrabold text-sm">{weather.rainfallMm} mm</span>
             </div>
             <div className="space-y-0.5">
               <span className="text-white/75 text-[10px] flex items-center gap-1">
-                <Wind className="w-3 h-3 text-emerald-300" /> Gió giật
+                <Wind className="w-3 h-3 text-emerald-300" /> {t('weatherWindLabel')}
               </span>
               <span className="font-extrabold text-sm">{weather.windSpeedKmH} km/h</span>
             </div>
             <div className="space-y-0.5">
               <span className="text-white/75 text-[10px] flex items-center gap-1">
-                <Sun className="w-3 h-3 text-amber-300" /> Chỉ số UV
+                <Sun className="w-3 h-3 text-amber-300" /> {t('weatherUvLabel')}
               </span>
-              <span className="font-extrabold text-sm">
-                {weather.uvIndex} {weather.uvIndex >= 8 ? '(Rất cao)' : weather.uvIndex >= 5 ? '(Cao)' : '(Dịu)'}
-              </span>
+              <span className="font-extrabold text-sm">{weather.uvIndex}</span>
             </div>
           </div>
         </div>
@@ -317,7 +317,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
           <div className="mt-5 pt-4 border-t border-white/15">
             <div className="text-[11px] font-bold uppercase tracking-wider text-white/75 mb-2 flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              <span>Diễn biến 24 giờ tới (Open-Meteo)</span>
+              <span>{t('weatherForecast24h')}</span>
             </div>
             <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
               {weather.forecast24h.map((slot, idx) => (
@@ -338,7 +338,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
         {/* Sync & Push actions bar */}
         <div className="mt-5 pt-4 border-t border-white/15 flex flex-wrap items-center justify-between gap-3 text-xs">
           <span className="text-white/85">
-            Nguồn: {weather.dataSource || 'Trạm khí tượng nông nghiệp'} • Tự động quét mỗi 10 phút
+            {weather.dataSource || 'Open-Meteo'} • {syncedTimeFormatted}
           </span>
           <div className="flex flex-wrap items-center gap-2">
             <button
@@ -348,7 +348,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
               className="px-3.5 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isWeatherLoading ? 'animate-spin' : ''}`} />
-              <span>{isWeatherLoading ? 'Đang đồng bộ...' : 'Cập nhật thực tế'}</span>
+              <span>{isWeatherLoading ? t('weatherSyncingBtn') : t('weatherRefreshBtn')}</span>
             </button>
 
             <button
@@ -357,7 +357,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
               className="px-3.5 py-1.5 rounded-xl bg-white text-emerald-950 font-bold hover:bg-emerald-50 transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <Bell className="w-3.5 h-3.5 text-amber-600" />
-              <span>Gửi Cảnh Báo Thời Tiết Đẩy</span>
+              <span>{t('weatherSendPushBtn')}</span>
             </button>
           </div>
         </div>
@@ -378,16 +378,16 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
             </div>
             <div>
               <h3 className="font-extrabold text-sm sm:text-base text-zinc-900 dark:text-zinc-100 flex flex-wrap items-center gap-2">
-                <span>Hệ Thống Cảnh Báo Đẩy Thời Tiết Khắc Nghiệt</span>
+                <span>{t('weatherPushSystemTitle')}</span>
                 {user && (
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-700 dark:text-sky-400">
                     <Cloud className="w-3.5 h-3.5" />
-                    Đồng bộ Firebase
+                    {t('syncedCloud')}
                   </span>
                 )}
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Tự động gửi thông báo đẩy ngay khi nhiệt độ, lượng mưa, gió giật hoặc rét đậm vượt ngưỡng an toàn
+                {t('weatherPushSystemDesc')}
               </p>
             </div>
           </div>
@@ -400,12 +400,12 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
                 className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold cursor-pointer flex items-center gap-1.5"
               >
                 <Bell className="w-3.5 h-3.5" />
-                <span>Cấp quyền thông báo đẩy</span>
+                <span>{t('weatherGrantPushBtn')}</span>
               </button>
             ) : (
               <span className="px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Trình duyệt đã bật Push</span>
+                <span>{t('weatherPushGranted')}</span>
               </span>
             )}
 
@@ -418,7 +418,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
                   : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300'
               }`}
             >
-              {weatherPushEnabled ? 'Đang bật tự động cảnh báo' : 'Đang tạm tắt cảnh báo'}
+              {weatherPushEnabled ? t('weatherAutoPushOn') : t('weatherAutoPushOff')}
             </button>
           </div>
         </div>
@@ -502,7 +502,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
             disabled={isSavingThresholds}
             className="col-span-2 md:col-span-1 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold cursor-pointer disabled:opacity-60"
           >
-            {isSavingThresholds ? 'Đang lưu...' : 'Lưu Ngưỡng'}
+            {isSavingThresholds ? t('weatherSavingBtn') : t('weatherSaveThresholdsBtn')}
           </button>
         </form>
 
@@ -515,7 +515,7 @@ export const WeatherView: React.FC<WeatherViewProps> = ({ onNavigateToDiagnosis 
         {/* Extreme weather scenario simulator */}
         <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2">
           <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">
-            Kiểm tra nhanh kịch bản thời tiết cực đoan & bắn thông báo đẩy:
+            {t('weatherSimPrompt')}
           </span>
           <div className="flex flex-wrap items-center gap-2">
             <button

@@ -22,11 +22,12 @@ export const SmartIrrigationAlertBanner: React.FC = () => {
     t
   } = useApp();
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isDismissed, setIsDismissed] = useState<boolean>(false);
   const [selectedMoisturePlantId, setSelectedMoisturePlantId] = useState<string | null>(null);
   const [tempMoistureInput, setTempMoistureInput] = useState<number>(30);
 
-  if (smartIrrigationAlerts.length === 0) {
+  if (smartIrrigationAlerts.length === 0 || isDismissed) {
     return null;
   }
 
@@ -36,45 +37,46 @@ export const SmartIrrigationAlertBanner: React.FC = () => {
   };
 
   return (
-    <div className="bg-sky-50 dark:bg-sky-950/40 border-y border-sky-200 dark:border-sky-900/60 transition-all">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5">
+    <div className="bg-sky-50/80 dark:bg-sky-950/30 border-b border-sky-200/80 dark:border-sky-900/50 transition-colors">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-1.5">
         {/* Top Header line */}
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 overflow-hidden">
-            <div className="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 animate-pulse shadow-sm shadow-sky-500/30">
-              <Droplets className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-xs sm:text-sm text-sky-950 dark:text-sky-100">
-                  Cảnh Báo Tưới Nước Thông Minh Theo Độ Ẩm & Thời Tiết
-                </span>
-                <span className="px-2 py-0.2 rounded-md bg-rose-500 text-white text-[10px] font-bold">
-                  {smartIrrigationAlerts.length} cây thiếu ẩm
-                </span>
-              </div>
-              <p className="text-[11px] text-sky-800 dark:text-sky-300 hidden md:block">
-                Nhiệt độ hiện tại: {weather.temp}°C tại {weather.city.split('/')[0]} làm tăng tốc độ bốc hơi rễ cây
-              </p>
-            </div>
+          <div className="flex items-center gap-2 min-w-0">
+            <Droplets className="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0" />
+            <p className="text-xs text-sky-950 dark:text-sky-100 truncate">
+              <span className="font-bold">{t('bannerIrrigationLabel')}</span>{' '}
+              <span className="font-semibold text-rose-600 dark:text-rose-400 tabular-nums">
+                {t('bannerIrrigationLowCount', { count: smartIrrigationAlerts.length })}
+              </span>
+              <span className="hidden md:inline text-sky-800/80 dark:text-sky-300/80">
+                {' '}· {weather.temp}°C · {weather.city.split('/')[0].trim()}
+              </span>
+            </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Button to test/trigger local push notification */}
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => triggerMoistureNotificationCheck(true)}
-              className="px-3 py-1.5 rounded-xl bg-sky-600 text-white text-xs font-bold hover:bg-sky-700 transition-colors flex items-center gap-1.5 shadow-xs cursor-pointer"
-              title="Phát thông báo đẩy ra màn hình thiết bị"
+              className="px-2.5 py-1 rounded-lg bg-sky-600 text-white text-[11px] font-semibold hover:bg-sky-700 transition-colors flex items-center gap-1 cursor-pointer"
             >
-              <Bell className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Phát Thông Báo Đẩy</span>
+              <Bell className="w-3 h-3" />
+              <span className="hidden sm:inline">{t('bannerIrrigationNotifyBtn')}</span>
             </button>
 
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="p-1.5 rounded-lg text-sky-700 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-colors cursor-pointer"
+              className="p-1 rounded-lg text-sky-700 dark:text-sky-300 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-colors cursor-pointer"
+              aria-label={isExpanded ? t('close') : t('viewDetails')}
             >
               {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
+
+            <button
+              onClick={() => setIsDismissed(true)}
+              className="p-1 rounded-lg text-sky-700/70 dark:text-sky-300/70 hover:bg-sky-100 dark:hover:bg-sky-900/40 transition-colors cursor-pointer"
+              aria-label={t('close')}
+            >
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>

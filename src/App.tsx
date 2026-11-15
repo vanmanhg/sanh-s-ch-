@@ -26,11 +26,9 @@ import {
   Flower2,
   ScanLine,
   Stethoscope,
-  Bot,
-  MapPin,
-  Sparkles,
-  WifiOff,
-  Camera
+  CalendarClock,
+  TrendingUp,
+  WifiOff
 } from 'lucide-react';
 
 const MainApp: React.FC = () => {
@@ -179,75 +177,53 @@ const MainApp: React.FC = () => {
         <button
           onClick={() => setActiveTab('garden')}
           className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
-            activeTab === 'garden' ? 'text-emerald-600 font-extrabold' : 'text-zinc-500 dark:text-zinc-400'
+            activeTab === 'garden' ? 'text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-400'
           }`}
         >
           <Flower2 className="w-5 h-5" />
-          <span className="text-[10px] truncate max-w-[55px]">{t('navGarden')}</span>
+          <span className="text-[10px] truncate max-w-[60px]">{t('navGarden')}</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('care-planner')}
+          className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
+            activeTab === 'care-planner' ? 'text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-400'
+          }`}
+        >
+          <CalendarClock className="w-5 h-5" />
+          <span className="text-[10px] truncate max-w-[60px]">{t('navCarePlanner')}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('identify')}
           className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
-            activeTab === 'identify' ? 'text-emerald-600 font-extrabold' : 'text-zinc-500 dark:text-zinc-400'
+            activeTab === 'identify' ? 'text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-400'
           }`}
         >
           <ScanLine className="w-5 h-5" />
-          <span className="text-[10px] truncate max-w-[55px]">{t('navIdentify')}</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('ar')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
-            activeTab === 'ar' ? 'text-purple-600 font-extrabold' : 'text-zinc-500 dark:text-zinc-400'
-          }`}
-        >
-          <Camera className="w-5 h-5" />
-          <span className="text-[10px] truncate max-w-[55px]">{t('navAR')}</span>
+          <span className="text-[10px] truncate max-w-[60px]">{t('navIdentify')}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('diagnosis')}
           className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
-            activeTab === 'diagnosis' ? 'text-rose-600 font-extrabold' : 'text-zinc-500 dark:text-zinc-400'
+            activeTab === 'diagnosis' ? 'text-rose-600 font-bold' : 'text-zinc-500 dark:text-zinc-400'
           }`}
         >
           <Stethoscope className="w-5 h-5" />
-          <span className="text-[10px] truncate max-w-[55px]">{t('navDiagnosis')}</span>
+          <span className="text-[10px] truncate max-w-[60px]">{t('navDiagnosis')}</span>
         </button>
 
         <button
-          onClick={() => setActiveTab('chatbot')}
+          onClick={() => setActiveTab('market-prices')}
           className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
-            activeTab === 'chatbot' ? 'text-emerald-600 font-extrabold' : 'text-zinc-500 dark:text-zinc-400'
+            activeTab === 'market-prices' ? 'text-emerald-600 font-bold' : 'text-zinc-500 dark:text-zinc-400'
           }`}
         >
-          <Bot className="w-5 h-5" />
-          <span className="text-[10px] truncate max-w-[55px]">{t('navChatbot')}</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('map')}
-          className={`flex flex-col items-center gap-0.5 p-1 rounded-xl cursor-pointer ${
-            activeTab === 'map' ? 'text-emerald-600 font-extrabold' : 'text-zinc-500 dark:text-zinc-400'
-          }`}
-        >
-          <MapPin className="w-5 h-5" />
-          <span className="text-[10px] truncate max-w-[55px]">{t('navMap')}</span>
+          <TrendingUp className="w-5 h-5" />
+          <span className="text-[10px] truncate max-w-[60px]">{t('navMarketPrices')}</span>
         </button>
       </div>
-
-      {/* Floating Dr. Green Quick Consultation Button (Visible on desktop/tablet when not in chatbot tab) */}
-      {activeTab !== 'chatbot' && (
-        <button
-          onClick={() => setActiveTab('chatbot')}
-          className="hidden sm:flex fixed bottom-6 right-6 z-30 items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-extrabold text-sm shadow-xl shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all cursor-pointer border-2 border-white dark:border-zinc-800"
-          title="Trò chuyện với Bác Sĩ Cây Trồng AI (Dr. Green)"
-        >
-          <Bot className="w-5 h-5 animate-pulse" />
-          <span>{t('quickHelp')}</span>
-        </button>
-      )}
     </div>
   );
 };

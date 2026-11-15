@@ -62,7 +62,13 @@ import {
   INITIAL_EXPERT_THREADS,
   INITIAL_EXPERT_QA
 } from '../data/mockData';
-import { translations } from '../utils/i18n';
+import {
+  detectPreferredLanguage,
+  getLocaleTag,
+  isSupportedLanguage,
+  translate,
+  TranslationKey
+} from '../utils/i18n';
 import {
   initializeOfflineCache,
   refreshOfflineCache,
@@ -80,8 +86,9 @@ interface AppContextType {
   setThemePreference: (pref: ThemePreference) => void;
   toggleTheme: () => void;
   language: Language;
+  localeTag: string;
   setLanguage: (lang: Language) => void;
-  t: (key: keyof typeof translations.vi) => string;
+  t: (key: TranslationKey, vars?: Record<string, string | number>) => string;
   autoSpeak: boolean;
   toggleAutoSpeak: () => void;
   voiceSpeed: number;
@@ -287,13 +294,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const hasUserToggledThemeRef = React.useRef(false);
 
   // Language state (up to 5 supported languages: vi, en, zh, km, ja)
-  const [language, setLanguageState] = useState<Language>(() => {
-    try {
-      const saved = localStorage.getItem('nongtro_lang') as Language;
-      if (saved === 'en' || saved === 'zh' || saved === 'km' || saved === 'ja' || saved === 'vi') return saved;
-    } catch {}
-    return 'vi';
-  });
+  const [language, setLanguageState] = useState<Language>(() => detectPreferredLanguage());
+  const localeTag = getLocaleTag(language);
   const hasUserSelectedLanguageRef = React.useRef(false);
 
   // Voice Assistance Settings
@@ -398,10 +400,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setThemePreferenceState('system');
         }
       }
-      if (
-        e.key === 'nongtro_lang' &&
-        (e.newValue === 'vi' || e.newValue === 'en' || e.newValue === 'zh' || e.newValue === 'km' || e.newValue === 'ja')
-      ) {
+      if (e.key === 'nongtro_lang' && isSupportedLanguage(e.newValue)) {
         setLanguageState(e.newValue);
       }
     };
@@ -435,6 +434,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch {}
     if (typeof document !== 'undefined') {
       document.documentElement.lang = language;
+      document.title = `${translate(language, 'appName')} — ${translate(language, 'tagline')}`;
     }
   }, [language]);
 
@@ -481,9 +481,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setTheme(nextMode);
   };
 
-  const t = (key: keyof typeof translations.vi): string => {
-    const langDict = translations[language] || translations.vi;
-    return langDict[key] || translations.vi[key] || (key as string);
+  const t = (key: TranslationKey, vars?: Record<string, string | number>): string => {
+    return translate(language, key, vars);
   };
 
   // Plants state
@@ -1920,6 +1919,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setThemePreference,
         toggleTheme,
         language,
+        localeTag,
         setLanguage,
         t,
         autoSpeak,

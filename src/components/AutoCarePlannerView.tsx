@@ -413,13 +413,13 @@ export const AutoCarePlannerView: React.FC = () => {
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-xs font-bold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Hệ Thống Lập Lịch Chăm Sóc Tự Động • Cloud SQL PostgreSQL</span>
+              <span>{t('plannerBadge')}</span>
             </div>
             <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
-              Kế Hoạch & Lịch Trình Chăm Sóc Cây Cá Nhân Hóa
+              {t('plannerTitle')}
             </h1>
             <p className="text-xs sm:text-sm text-emerald-100/90 max-w-2xl leading-relaxed">
-              Nhập loại cây, vị trí trồng và điều kiện môi trường. AI sẽ tự động phân tích nhu cầu sinh lý và đề xuất lịch tưới nước, bón phân, cắt tỉa kèm thông báo nhắc việc theo thời gian thực.
+              {t('plannerSubtitle')}
             </p>
           </div>
 
@@ -433,10 +433,10 @@ export const AutoCarePlannerView: React.FC = () => {
                   : 'bg-amber-400 text-amber-950 hover:bg-amber-300'
               }`}
             >
-              <BellRing className="w-4 h-4 animate-bounce" />
-              <span>{hasNotificationPermission ? 'Thông Báo: Đang Bật' : 'Bật Thông Báo Nhắc Việc'}</span>
+              <BellRing className="w-4 h-4" />
+              <span>{hasNotificationPermission ? t('plannerNotifOn') : t('plannerNotifEnable')}</span>
             </button>
-            <span className="text-[10px] text-emerald-200/80">Lưu trữ bảo mật trên Cloud SQL</span>
+            <span className="text-[10px] text-emerald-200/80">{t('plannerStorageHint')}</span>
           </div>
         </div>
 
@@ -451,7 +451,7 @@ export const AutoCarePlannerView: React.FC = () => {
             }`}
           >
             <Plus className="w-4 h-4" />
-            <span>Lập Kế Hoạch Mới</span>
+            <span>{t('plannerTabCreate')}</span>
           </button>
 
           <button
@@ -463,7 +463,7 @@ export const AutoCarePlannerView: React.FC = () => {
             }`}
           >
             <CalendarClock className="w-4 h-4" />
-            <span>Lịch Công Việc Cần Làm</span>
+            <span>{t('plannerTabTasks')}</span>
             {tasks.filter(t => t.status === 'pending' && t.scheduledDate <= todayStr).length > 0 && (
               <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-extrabold">
                 {tasks.filter(t => t.status === 'pending' && t.scheduledDate <= todayStr).length}
@@ -480,7 +480,7 @@ export const AutoCarePlannerView: React.FC = () => {
             }`}
           >
             <Sprout className="w-4 h-4" />
-            <span>Cây Đang Chăm Sóc ({plans.length})</span>
+            <span>{t('plannerTabPlans', { count: plans.length })}</span>
           </button>
 
           <button
@@ -533,7 +533,7 @@ export const AutoCarePlannerView: React.FC = () => {
           <div className="space-y-0.5">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="font-extrabold text-sm sm:text-base text-zinc-900 dark:text-zinc-100">
-                Nhắc Lịch Tưới Nước Hàng Ngày
+                {t('plannerDailyWaterTitle')}
               </h2>
               <span
                 className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
@@ -543,12 +543,12 @@ export const AutoCarePlannerView: React.FC = () => {
                 }`}
               >
                 {plantsDueForWatering.length > 0
-                  ? `Cần tưới hôm nay: ${plantsDueForWatering.length} cây`
-                  : 'Tất cả cây đã đủ nước'}
+                  ? t('plannerDueCount', { count: plantsDueForWatering.length })
+                  : t('plannerAllWatered')}
               </span>
             </div>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Hệ thống tự động kiểm tra chu kỳ tưới của từng cây trong vườn và gửi thông báo nhắc đúng giờ mỗi ngày.
+              {t('plannerDailyWaterDesc')}
             </p>
           </div>
         </div>
@@ -568,12 +568,12 @@ export const AutoCarePlannerView: React.FC = () => {
             ) : (
               <BellOff className="w-3.5 h-3.5" />
             )}
-            <span>{dailyWateringReminder.enabled ? 'Đang Bật' : 'Đang Tắt'}</span>
+            <span>{dailyWateringReminder.enabled ? t('onLabel') : t('offLabel')}</span>
           </button>
 
           <label className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-xs font-bold text-zinc-700 dark:text-zinc-200">
             <Clock className="w-3.5 h-3.5 text-sky-600" />
-            <span>Giờ nhắc:</span>
+            <span>{t('plannerReminderTime')}</span>
             <input
               type="time"
               value={dailyWateringReminder.time}
@@ -588,7 +588,7 @@ export const AutoCarePlannerView: React.FC = () => {
             className="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>Gửi Nhắc Tưới Ngay</span>
+            <span>{t('plannerSendWaterReminder')}</span>
           </button>
 
           {plantsDueForWatering.length > 0 && (
@@ -598,13 +598,13 @@ export const AutoCarePlannerView: React.FC = () => {
               className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
             >
               <Check className="w-3.5 h-3.5" />
-              <span>Tưới Tất Cả Đến Hạn ({plantsDueForWatering.length})</span>
+              <span>{t('plannerWaterAllDue', { count: plantsDueForWatering.length })}</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* SUB-TAB 1: LẬP KẾ HOẠCH MỚI */}
+      {/* SUB-TAB 1 */}
       {activeSubTab === 'create' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Input Form (7 cols) */}
@@ -613,17 +613,17 @@ export const AutoCarePlannerView: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Sliders className="w-5 h-5 text-emerald-600" />
                 <h2 className="font-extrabold text-base text-zinc-900 dark:text-zinc-100">
-                  Thông Tin Cây & Điều Kiện Môi Trường
+                  {t('plannerFormTitle')}
                 </h2>
               </div>
-              <span className="text-xs text-zinc-500">Bước 1/2</span>
+              <span className="text-xs text-zinc-500">{t('plannerStep1of2')}</span>
             </div>
 
             {/* Quick Picks from My Garden */}
             {plants.length > 0 && (
               <div>
                 <label className="text-xs font-bold text-emerald-700 dark:text-emerald-300 block mb-1.5">
-                  Tải nhanh từ cây trong vườn của bạn:
+                  {t('plannerPickFromGarden')}
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {plants.map(p => (
@@ -657,7 +657,7 @@ export const AutoCarePlannerView: React.FC = () => {
             {/* Quick Picks */}
             <div>
               <label className="text-xs font-bold text-zinc-700 dark:text-zinc-300 block mb-1.5">
-                Gợi ý loại cây thông dụng:
+                {t('plannerQuickPicks')}
               </label>
               <div className="flex flex-wrap gap-1.5">
                 {QUICK_PLANTS.map((qp, idx) => (
@@ -688,32 +688,32 @@ export const AutoCarePlannerView: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="font-bold text-zinc-700 dark:text-zinc-300 block mb-1">
-                    Tên loại cây trồng <span className="text-rose-500">*</span>
+                    {t('plannerPlantNameLabel')} <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={plantName}
                     onChange={e => setPlantName(e.target.value)}
-                    placeholder="Ví dụ: Cây Trầu Bà Lỗ, Hoa Hồng, Cà Chua..."
+                    placeholder="Monstera, Tomato, Rose..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:outline-emerald-600 font-semibold"
                   />
                 </div>
 
                 <div>
                   <label className="font-bold text-zinc-700 dark:text-zinc-300 block mb-1">
-                    Nhóm phân loại
+                    {t('plannerCategoryLabel')}
                   </label>
                   <select
                     value={plantCategory}
                     onChange={e => setPlantCategory(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:outline-emerald-600"
                   >
-                    <option value="indoor">🌿 Cây cảnh trong nhà (Indoor)</option>
-                    <option value="vegetable">🥦 Rau củ quả ăn lá/trái</option>
-                    <option value="fruit">🍈 Cây ăn trái lâu năm</option>
-                    <option value="flower">🌹 Hoa & Kiểng lá ngoài trời</option>
-                    <option value="herb">🌱 Thảo mộc & Gia vị</option>
-                    <option value="bonsai">🪴 Cây Bonsai nghệ thuật</option>
+                    <option value="indoor">🌿 {t('gardenIndoor')}</option>
+                    <option value="vegetable">🥦 {t('gardenVeg')}</option>
+                    <option value="fruit">🍈 {t('gardenFruit')}</option>
+                    <option value="flower">🌹 {t('gardenFlower')}</option>
+                    <option value="herb">🌱 Herb & Spice</option>
+                    <option value="bonsai">🪴 Bonsai</option>
                   </select>
                 </div>
               </div>
@@ -723,13 +723,13 @@ export const AutoCarePlannerView: React.FC = () => {
                 <div>
                   <label className="font-bold text-zinc-700 dark:text-zinc-300 block mb-1 flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Vị trí đặt cây</span>
+                    <span>{t('plannerLocationLabel')}</span>
                   </label>
                   <input
                     type="text"
                     value={location}
                     onChange={e => setLocation(e.target.value)}
-                    placeholder="Ví dụ: Ban công hướng Đông, Phòng khách, Sân thượng..."
+                    placeholder="Balcony, Patio, Indoor..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:outline-emerald-600"
                   />
                 </div>
@@ -737,17 +737,17 @@ export const AutoCarePlannerView: React.FC = () => {
                 <div>
                   <label className="font-bold text-zinc-700 dark:text-zinc-300 block mb-1 flex items-center gap-1">
                     <Sun className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Mức độ ánh sáng</span>
+                    <span>{t('plannerSunlightLabel')}</span>
                   </label>
                   <select
                     value={sunlight}
                     onChange={e => setSunlight(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:outline-emerald-600"
                   >
-                    <option value="full_sun">☀️ Nắng toàn phần trực tiếp (6-8 tiếng)</option>
-                    <option value="partial_sun">🌤️ Nắng bán phần / Nắng sáng sớm (3-5 tiếng)</option>
-                    <option value="indirect">⛅ Nắng tán xạ gián tiếp / Cạnh cửa sổ</option>
-                    <option value="shade">☁️ Bóng râm râm mát / Dưới tán cây lớn</option>
+                    <option value="full_sun">☀️ Full Sun (6-8h)</option>
+                    <option value="partial_sun">🌤️ Partial Sun (3-5h)</option>
+                    <option value="indirect">⛅ Indirect Light</option>
+                    <option value="shade">☁️ Shade</option>
                   </select>
                 </div>
               </div>
@@ -757,13 +757,13 @@ export const AutoCarePlannerView: React.FC = () => {
                 <div>
                   <label className="font-bold text-zinc-700 dark:text-zinc-300 block mb-1 flex items-center gap-1">
                     <Thermometer className="w-3.5 h-3.5 text-rose-500" />
-                    <span>Nhiệt độ môi trường</span>
+                    <span>{t('plannerTempLabel')}</span>
                   </label>
                   <input
                     type="text"
                     value={temperature}
                     onChange={e => setTemperature(e.target.value)}
-                    placeholder="Ví dụ: 25°C - 32°C"
+                    placeholder="25°C - 32°C"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:outline-emerald-600"
                   />
                 </div>
@@ -771,7 +771,7 @@ export const AutoCarePlannerView: React.FC = () => {
                 <div>
                   <label className="font-bold text-zinc-700 dark:text-zinc-300 block mb-1 flex items-center gap-1">
                     <Droplets className="w-3.5 h-3.5 text-sky-500" />
-                    <span>Độ ẩm không khí</span>
+                    <span>{t('plannerHumidityLabel')}</span>
                   </label>
                   <input
                     type="text"

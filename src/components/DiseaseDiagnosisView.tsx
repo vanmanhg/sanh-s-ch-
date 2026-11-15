@@ -101,7 +101,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
   onGoToChatbot,
   onGoToLibrary,
 }) => {
-  const { plants, addCareLog, isOffline } = useApp();
+  const { plants, addCareLog, isOffline, t } = useApp();
   const { user, authReady, isSigningIn, signInWithGoogle } = useFirebaseAuth();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -567,13 +567,13 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
       <div className="text-center space-y-1.5">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 text-xs font-bold mb-1">
           <Stethoscope className="w-3.5 h-3.5" />
-          <span>Bác Sĩ Thực Vật Học AI • Phát Hiện Bệnh & Phác Đồ Điều Trị</span>
+          <span>{t('diagnosisBadge')}</span>
         </div>
         <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">
-          Chẩn Đoán Bệnh Cây Trồng Bằng AI & Đồng Bộ Đám Mây
+          {t('diagnosisTitle')}
         </h2>
         <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-xl mx-auto">
-          Chụp trực tiếp hoặc tải ảnh lá, thân, rễ bị bệnh. AI nhận diện tác nhân gây hại, đề xuất lộ trình điều trị từng bước và lưu hồ sơ theo dõi trên Firebase.
+          {t('diagnosisSubtitle')}
         </p>
       </div>
 
@@ -582,7 +582,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
         <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-4 py-3 flex items-center gap-2.5 text-xs text-amber-900 dark:text-amber-200">
           <WifiOff className="w-4 h-4 text-amber-600 shrink-0" />
           <span>
-            Bạn đang ở chế độ ngoại tuyến. Hệ thống sẽ cung cấp hướng dẫn xử lý sơ bộ tại chỗ; kết nối mạng để dùng AI thị giác chuyên sâu và đồng bộ Firebase.
+            {t('diagnosisOfflineNote')}
           </span>
         </div>
       )}
@@ -614,11 +614,11 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
             <div>
               <p className="font-extrabold text-sm sm:text-base text-zinc-800 dark:text-zinc-200">
                 {isDragging
-                  ? 'Thả ảnh vào đây để bắt đầu phân tích bệnh!'
-                  : 'Kéo & Thả, Chụp Hoặc Tải Ảnh Vùng Lá, Thân, Rễ Bị Bệnh'}
+                  ? t('diagnosisDropActive')
+                  : t('diagnosisDropPrompt')}
               </p>
               <p className="text-xs text-zinc-500 mt-1">
-                Hỗ trợ JPG, PNG, WebP • Nên chụp cận cảnh, đủ sáng và lấy nét rõ vết đốm hoặc côn trùng
+                {t('diagnosisDropHint')}
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
@@ -628,7 +628,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
                 className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
               >
                 <Camera className="w-4 h-4" />
-                <span>Chụp Ảnh Trực Tiếp</span>
+                <span>{t('takePhoto')}</span>
               </button>
               <button
                 type="button"
@@ -636,7 +636,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
                 className="px-4 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5 cursor-pointer transition-colors"
               >
                 <Upload className="w-4 h-4 text-rose-600" />
-                <span>Tải Ảnh Từ Máy</span>
+                <span>{t('uploadPhoto')}</span>
               </button>
             </div>
           </div>
@@ -645,7 +645,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
             <div className="relative rounded-2xl overflow-hidden max-h-80 w-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
               <img
                 src={selectedImage}
-                alt="Ảnh cây trồng cần chẩn đoán"
+                alt={t('diagnosisResult')}
                 referrerPolicy="no-referrer"
                 className="w-full h-80 object-cover"
               />
@@ -656,7 +656,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
                   className="px-3 py-1.5 rounded-xl bg-black/70 text-white text-xs font-bold backdrop-blur-xs hover:bg-black/90 cursor-pointer flex items-center gap-1"
                 >
                   <Camera className="w-3.5 h-3.5" />
-                  <span>Chụp lại</span>
+                  <span>{t('identifyRetake')}</span>
                 </button>
                 <button
                   type="button"
@@ -669,7 +669,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
                   }}
                   className="px-3 py-1.5 rounded-xl bg-black/70 text-white text-xs font-bold backdrop-blur-xs hover:bg-black/90 cursor-pointer"
                 >
-                  Đổi ảnh
+                  {t('identifyChooseOther')}
                 </button>
               </div>
             </div>
@@ -678,17 +678,17 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                  Liên kết cây trong Vườn Của Tôi (tùy chọn):
+                  {t('diagnosisLinkPlantLabel')}
                 </label>
                 <select
                   value={linkedPlantId}
                   onChange={e => setLinkedPlantId(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs text-zinc-800 dark:text-zinc-200"
                 >
-                  <option value="">-- Tự động nhận diện từ ảnh --</option>
+                  <option value="">{t('diagnosisAutoDetectOption')}</option>
                   {plants.map(p => (
                     <option key={p.id} value={p.id}>
-                      {p.name} (Ẩm đất {p.soilMoisturePercent ?? 50}%)
+                      {p.name} ({p.soilMoisturePercent ?? 50}%)
                     </option>
                   ))}
                 </select>
@@ -696,11 +696,11 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
 
               <div>
                 <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                  Ghi chú triệu chứng thêm (không bắt buộc):
+                  {t('diagnosisNotesLabel')}
                 </label>
                 <input
                   type="text"
-                  placeholder="Ví dụ: Vàng lá sau mưa 3 ngày, đốm lan nhanh..."
+                  placeholder={t('diagnosisNotesPlaceholder')}
                   value={farmerNotes}
                   onChange={e => setFarmerNotes(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-xs text-zinc-800 dark:text-zinc-200"
@@ -719,7 +719,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
                   onClick={runDiagnosis}
                   className="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-bold shrink-0 cursor-pointer"
                 >
-                  Thử lại
+                  {t('identifyRetry')}
                 </button>
               </div>
             )}
@@ -734,12 +734,12 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
                 {isDiagnosing ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>AI Đang Phân Tích Bệnh & Lập Phác Đồ...</span>
+                    <span>{t('diagnosisRunningBtn')}</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4" />
-                    <span>Chẩn Đoán Bệnh Ngay Bằng AI</span>
+                    <span>{t('diagnosisRunBtn')}</span>
                   </>
                 )}
               </button>
@@ -751,7 +751,7 @@ export const DiseaseDiagnosisView: React.FC<DiseaseDiagnosisViewProps> = ({
         <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
           <p className="text-xs font-bold text-zinc-500 mb-2 flex items-center gap-1">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>Mẫu bệnh phổ biến để kiểm tra thử:</span>
+            <span>{t('diagnosisSamplesLabel')}</span>
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {SAMPLE_DISEASES.map((sample, idx) => (

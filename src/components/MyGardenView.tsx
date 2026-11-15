@@ -133,129 +133,120 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({
     setNewGrowthPhoto('');
   };
 
+  const avgHealth =
+    plants.length > 0
+      ? Math.round(plants.reduce((acc, p) => acc + (p.healthScore || 90), 0) / plants.length)
+      : 100;
+
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-6">
-      {/* Top Banner & Quick Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
-            <Layers className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">{plants.length}</div>
-            <div className="text-xs text-zinc-500 dark:text-zinc-400">{t('totalPlants')}</div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
-            <Droplets className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="text-xl sm:text-2xl font-extrabold text-sky-600 dark:text-sky-400">
-              {plantsNeedingWater.length}
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 py-5 space-y-4">
+      {/* Compact Overview Strip */}
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-5 sm:gap-8">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+              <Layers className="w-4 h-4" />
             </div>
-            <div className="text-xs text-zinc-500 dark:text-zinc-400">{t('needsWaterToday')}</div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400">
-            <Activity className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="text-xl sm:text-2xl font-extrabold text-teal-600 dark:text-teal-400">
-              {plants.length > 0
-                ? Math.round(plants.reduce((acc, p) => acc + (p.healthScore || 90), 0) / plants.length)
-                : 100}
-              %
+            <div>
+              <div className="text-lg font-extrabold text-zinc-900 dark:text-zinc-100 leading-tight tabular-nums">
+                {plants.length}
+              </div>
+              <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{t('totalPlants')}</div>
             </div>
-            <div className="text-xs text-zinc-500 dark:text-zinc-400">{t('healthyRate')}</div>
+          </div>
+
+          <div className="h-7 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block" />
+
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
+              <Droplets className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-lg font-extrabold text-sky-600 dark:text-sky-400 leading-tight tabular-nums">
+                {plantsNeedingWater.length}
+              </div>
+              <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{t('needsWaterToday')}</div>
+            </div>
+          </div>
+
+          <div className="h-7 w-px bg-zinc-200 dark:bg-zinc-800 hidden sm:block" />
+
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400">
+              <Activity className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-lg font-extrabold text-teal-600 dark:text-teal-400 leading-tight tabular-nums">
+                {avgHealth}%
+              </div>
+              <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{t('healthyRate')}</div>
+            </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-tr from-emerald-600 to-teal-600 p-4 rounded-2xl text-white shadow-md shadow-emerald-700/20 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold opacity-90">Hành Động Nhanh</span>
-            <Sparkles className="w-4 h-4 text-emerald-200" />
-          </div>
-          <div className="flex gap-2 mt-2">
-            {plantsNeedingWater.length > 0 ? (
-              <button
-                onClick={handleWaterAll}
-                className="w-full py-1.5 px-2 bg-white text-emerald-800 font-bold text-xs rounded-xl shadow-xs hover:bg-emerald-50 transition-colors flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <Droplets className="w-3.5 h-3.5 text-sky-500" />
-                {t('waterAll')}
-              </button>
-            ) : (
-              <button
-                onClick={onGoToIdentify}
-                className="w-full py-1.5 px-2 bg-white text-emerald-800 font-bold text-xs rounded-xl shadow-xs hover:bg-emerald-50 transition-colors flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <ScanLine className="w-3.5 h-3.5" />
-                Thêm Cây Bằng AI
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Action Bar: Filter & Add Plant button */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-zinc-900 p-3 rounded-2xl border border-zinc-200 dark:border-zinc-800">
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto no-scrollbar pb-1 sm:pb-0">
-          {[
-            { id: 'all', label: 'Tất cả cây' },
-            { id: 'vegetable', label: 'Rau & Củ' },
-            { id: 'fruit', label: 'Cây Ăn Trái' },
-            { id: 'indoor', label: 'Cây Trong Nhà' },
-            { id: 'flower', label: 'Hoa & Kiểng' }
-          ].map(c => (
+        {/* Focused Primary Actions */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {plantsNeedingWater.length > 0 && (
             <button
-              key={c.id}
-              onClick={() => setSelectedCategory(c.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap cursor-pointer transition-all ${
-                selectedCategory === c.id
-                  ? 'bg-emerald-700 text-white font-bold'
-                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200'
-              }`}
+              onClick={handleWaterAll}
+              className="flex items-center gap-1.5 px-3 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
             >
-              {c.label}
+              <Droplets className="w-3.5 h-3.5" />
+              <span>{t('waterAll')}</span>
             </button>
-          ))}
-        </div>
+          )}
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
           {plants.length > 0 && (
             <button
               onClick={() => setSelectedPlantForReport(plants[0])}
-              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 border border-emerald-600 text-emerald-700 dark:text-emerald-300 dark:border-emerald-700 text-xs font-bold rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors cursor-pointer"
-              title="Xuất hồ sơ sinh trưởng và lịch sử tưới cây dạng file PDF / A4"
+              className="flex items-center gap-1.5 px-3 py-2 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-semibold rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             >
-              <FileText className="w-4 h-4 text-emerald-600" />
-              <span>Xuất Báo Cáo PDF</span>
+              <FileText className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="hidden md:inline">{t('gardenExportPdf')}</span>
             </button>
           )}
 
           {onLaunchAR && (
             <button
               onClick={() => onLaunchAR()}
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
-              title="Mở camera ướm thử cây trong không gian thực với AR 3D"
+              className="flex items-center gap-1.5 px-3 py-2 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 text-xs font-semibold rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
             >
-              <Camera className="w-4 h-4 text-purple-200" />
-              <span>Ướm Vườn AR</span>
+              <Camera className="w-3.5 h-3.5 text-indigo-500" />
+              <span className="hidden md:inline">{t('gardenArPreview')}</span>
             </button>
           )}
 
           <button
             onClick={onGoToIdentify}
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-xs hover:bg-emerald-700 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>{t('addPlantBtn')}</span>
           </button>
         </div>
+      </div>
+
+      {/* Category Filter Strip */}
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        {[
+          { id: 'all', label: t('gardenAll') },
+          { id: 'vegetable', label: t('gardenVeg') },
+          { id: 'fruit', label: t('gardenFruit') },
+          { id: 'indoor', label: t('gardenIndoor') },
+          { id: 'flower', label: t('gardenFlower') }
+        ].map(c => (
+          <button
+            key={c.id}
+            onClick={() => setSelectedCategory(c.id)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors ${
+              selectedCategory === c.id
+                ? 'bg-emerald-700 text-white'
+                : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+            }`}
+          >
+            {c.label}
+          </button>
+        ))}
       </div>
 
       {/* Plants Grid */}
@@ -264,15 +255,15 @@ export const MyGardenView: React.FC<MyGardenViewProps> = ({
           <div className="w-16 h-16 mx-auto rounded-full bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-600 mb-3">
             <Plus className="w-8 h-8" />
           </div>
-          <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">Chưa có cây nào trong mục này</h3>
+          <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">{t('gardenEmptyTitle')}</h3>
           <p className="text-xs text-zinc-500 mt-1 max-w-sm mx-auto">
-            Hãy dùng tính năng Nhận Diện AI để chụp ảnh cây trồng và tự động lưu vào vườn với lịch tưới thông minh!
+            {t('gardenEmptyDesc')}
           </p>
           <button
             onClick={onGoToIdentify}
-            className="mt-4 px-5 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors"
+            className="mt-4 px-5 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors cursor-pointer"
           >
-            Chụp Ảnh Nhận Diện Cây Ngay
+            {t('gardenEmptyCta')}
           </button>
         </div>
       ) : (

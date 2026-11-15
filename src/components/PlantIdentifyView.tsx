@@ -383,13 +383,13 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
       <div className="text-center space-y-1.5">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-xs font-bold mb-1">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Nhận Diện Thực Vật Thông Minh • Ảnh Chụp & Camera</span>
+          <span>{t('identifyBadge')}</span>
         </div>
         <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-zinc-100">
-          Nhận Diện Cây Trồng & Hướng Dẫn Chăm Sóc
+          {t('identifyTitle')}
         </h2>
         <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto">
-          Chụp ảnh trực tiếp bằng camera hoặc tải ảnh lá, hoa, thân cây. AI sẽ trả về tên cây, đặc điểm và hướng dẫn tưới, ánh sáng, bón phân cơ bản.
+          {t('identifySubtitle')}
         </p>
       </div>
 
@@ -430,10 +430,10 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
             </div>
             <div>
               <p className="font-extrabold text-sm sm:text-base text-zinc-800 dark:text-zinc-200">
-                {isDragging ? 'Thả ảnh vào đây để nhận diện cây!' : 'Chụp Ảnh Trực Tiếp Hoặc Tải Ảnh Cây Trồng'}
+                {isDragging ? t('identifyDropActive') : t('identifyDropPrompt')}
               </p>
               <p className="text-xs text-zinc-500 mt-1">
-                Hỗ trợ ảnh lá, hoa, quả hoặc toàn thân cây (JPG, PNG, WebP)
+                {t('identifySupportedFormats')}
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
@@ -443,7 +443,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
                 className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
               >
                 <Camera className="w-4 h-4" />
-                <span>Mở Camera Chụp Ảnh</span>
+                <span>{t('identifyOpenCamera')}</span>
               </button>
               <button
                 type="button"
@@ -451,7 +451,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
                 className="px-4 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5 cursor-pointer transition-colors"
               >
                 <Upload className="w-4 h-4 text-emerald-600" />
-                <span>Chọn Từ Thư Viện</span>
+                <span>{t('identifyChooseGallery')}</span>
               </button>
             </div>
           </div>
@@ -460,7 +460,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
             <div className="relative rounded-2xl overflow-hidden max-h-80 w-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
               <img
                 src={selectedImage}
-                alt="Ảnh cây cần nhận diện"
+                alt={t('identifyResult')}
                 referrerPolicy="no-referrer"
                 className="w-full h-80 object-cover"
               />
@@ -471,7 +471,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
                   className="px-3 py-1.5 rounded-xl bg-black/70 text-white text-xs font-bold backdrop-blur-xs hover:bg-black/90 cursor-pointer flex items-center gap-1"
                 >
                   <Camera className="w-3.5 h-3.5" />
-                  <span>Chụp lại</span>
+                  <span>{t('identifyRetake')}</span>
                 </button>
                 <button
                   type="button"
@@ -484,7 +484,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
                   }}
                   className="px-3 py-1.5 rounded-xl bg-black/70 text-white text-xs font-bold backdrop-blur-xs hover:bg-black/90 cursor-pointer"
                 >
-                  Chọn Ảnh Khác
+                  {t('identifyChooseOther')}
                 </button>
               </div>
             </div>
@@ -500,7 +500,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
                   onClick={runIdentification}
                   className="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-bold shrink-0 cursor-pointer"
                 >
-                  Thử lại
+                  {t('identifyRetry')}
                 </button>
               </div>
             )}
@@ -520,7 +520,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4" />
-                    <span>Bắt Đầu Nhận Diện Cây Bằng AI</span>
+                    <span>{t('identifyRunBtn')}</span>
                   </>
                 )}
               </button>
@@ -532,7 +532,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
         <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
           <p className="text-xs font-bold text-zinc-500 mb-2 flex items-center gap-1">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>Hoặc thử ngay với ảnh mẫu có sẵn:</span>
+            <span>{t('identifySamplesLabel')}</span>
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {SAMPLE_PLANTS.map((sample, idx) => (
@@ -587,7 +587,7 @@ export const PlantIdentifyView: React.FC<PlantIdentifyViewProps> = ({ onAddedToG
                 }`}
               >
                 <CalendarClock className="w-4 h-4 text-emerald-600" />
-                <span>{scheduleCreated ? 'Đã Lên Lịch Định Kỳ' : 'Lên Lịch Chăm Sóc Định Kỳ'}</span>
+                <span>{scheduleCreated ? t('identifyScheduleDone') : t('identifyCreateSchedule')}</span>
               </button>
 
               <button

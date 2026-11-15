@@ -41,15 +41,16 @@ export const WeatherPestEarlyWarningBanner: React.FC<WeatherPestEarlyWarningBann
     t
   } = useApp();
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedAlertForModal, setSelectedAlertForModal] = useState<WeatherPestRiskAlert | null>(null);
   const [testNotificationSent, setTestNotificationSent] = useState<boolean>(false);
   const [dismissedAlertIds, setDismissedAlertIds] = useState<string[]>([]);
   const [handledAlertIds, setHandledAlertIds] = useState<string[]>([]);
+  const [isBarHidden, setIsBarHidden] = useState<boolean>(false);
 
   const activeAlerts = weatherPestAlerts.filter(a => !dismissedAlertIds.includes(a.id));
 
-  if (activeAlerts.length === 0) {
+  if (activeAlerts.length === 0 || isBarHidden) {
     return null;
   }
 
@@ -81,53 +82,51 @@ export const WeatherPestEarlyWarningBanner: React.FC<WeatherPestEarlyWarningBann
 
   return (
     <>
-      <div className="bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-orange-500/15 dark:from-amber-950/40 dark:via-rose-950/40 dark:to-orange-950/40 border-b border-amber-300 dark:border-amber-900/60 transition-all shadow-xs">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5">
+      <div className="bg-amber-50/80 dark:bg-amber-950/25 border-b border-amber-200/80 dark:border-amber-900/50 transition-colors">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-1.5">
           {/* Main Banner Header Line */}
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/20 animate-pulse">
-                <Bug className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-extrabold text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
-                    <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400" />
-                    Cảnh Báo Sớm Sâu Bệnh Theo Thời Tiết
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-600 text-white animate-bounce shadow-xs">
-                    {criticalCount > 0 ? `${criticalCount} khẩn cấp` : `${activeAlerts.length} cây có rủi ro`}
-                  </span>
-                  <span className="text-[11px] text-zinc-500 dark:text-zinc-400 hidden lg:inline">
-                    • Khí hậu: {weather.temp}°C | Ẩm: {weather.humidity}% | Mưa: {weather.rainfallMm}mm
-                  </span>
-                </div>
-                <p className="text-[11px] text-zinc-600 dark:text-zinc-300 line-clamp-1 max-w-2xl mt-0.5">
-                  <strong className="text-rose-700 dark:text-rose-400">{topAlert.plantName}</strong>: {topAlert.triggerReason}
-                </p>
-              </div>
+            <div className="flex items-center gap-2 min-w-0">
+              <ShieldAlert className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
+              <p className="text-xs text-zinc-800 dark:text-zinc-200 truncate">
+                <span className="font-bold">{t('bannerPestLabel')}</span>{' '}
+                <span className="font-semibold text-rose-700 dark:text-rose-400">
+                  {criticalCount > 0
+                    ? t('bannerPestCriticalCount', { count: criticalCount })
+                    : t('bannerPestRiskCount', { count: activeAlerts.length })}
+                </span>
+                <span className="hidden sm:inline text-zinc-600 dark:text-zinc-400">
+                  {' '}— {topAlert.plantName}: {topAlert.pestDiseaseName}
+                </span>
+              </p>
             </div>
 
             {/* Right Quick Actions */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              {/* Push Notification Toggle Button */}
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 onClick={handleTestPush}
-                className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
-                title="Gửi thử thông báo đẩy sâu bệnh ra thanh thông báo thiết bị"
+                className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
               >
-                <Bell className="w-3.5 h-3.5 animate-ring" />
+                <Bell className="w-3 h-3" />
                 <span className="hidden sm:inline">
-                  {testNotificationSent ? 'Đã Gửi Đẩy!' : 'Phát Thông Báo Đẩy'}
+                  {testNotificationSent ? t('bannerPestSentBtn') : t('bannerPestNotifyBtn')}
                 </span>
               </button>
 
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-1.5 rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
-                title={isExpanded ? 'Thu gọn' : 'Xem chi tiết rủi ro'}
+                className="p-1 rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                aria-label={isExpanded ? t('close') : t('viewDetails')}
               >
                 {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+
+              <button
+                onClick={() => setIsBarHidden(true)}
+                className="p-1 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                aria-label={t('close')}
+              >
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
